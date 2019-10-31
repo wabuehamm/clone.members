@@ -1,0 +1,146 @@
+# Clone the wabue members area
+
+- name: "Create temporary path"
+  tasks:
+    - tempfile:
+        state: "directory"
+      register: "local_tempdir"
+
+- name: "Dump database"
+  hosts: database_source
+  tasks:
+    - tempfile:
+      register: "tempfile"
+    - mysql_db:
+        name: "{{ database_source_name }}"
+        login_user: "{{ database_source_username }}"
+        login_password: "{{ database_source_password }}"
+        state: "dump"
+        target: "{{ tempfile }}.bz2"
+    - fetch:
+        src: "{{ tempfile }}.bz2"
+        dest: "{{ local_tempdir }}"
+        flat: "yes"
+    - file:
+        path: "{{ tempfile }}.bz2"
+        state: "absent"
+
+- name: "Fix database dump"
+  tasks:
+    - name: "Fix URL"
+      replace:
+        path: "{{ local_tempdir }}/{{ tempfile }}"
+        regexp: "{{ url_source }}"
+        replace: "{{ url_destination }}"
+    - name: "Fix paths"
+      replace:
+        path: "{{ local_tempdir }}/{{ tempfile }}"
+        regexp: "{{ data_folder_source }}"
+        replace: "{{ data_folder_destination }}"
+
+- name: "Restore dump"
+  hosts: database_destination
+  tasks:
+    - tempfile:
+        state: "directory"
+      register: "remote_tempdir"
+    - copy:
+        src: "{{ local_tempdir }}/{{ tempfile }}"
+        dest: "{{ remote_tempdir }}"
+    - mysql_db:
+        name: "{{ database_destination_name }}"
+        login_user: "{{ database_destination_username }}"
+        login_password: "{{ database_destination_password }}"
+        state: "import"
+        target: "{{ remote_tempdir }}/{{ tempfile }}.bz2"
+    - file:
+        path: "{{ remote_tempdir }}"
+        state: "absent"
+
+- name: "Clean up locally"
+  tasks:
+    - file:
+        path: "{{ local_tempdir }}/{{ tempfile }}"
+        state: "absent"
+
+- name: "Transfer application from source"
+  hosts: application_source
+  tasks:
+    - tempfile:
+      register: "application_archive"
+    - archive:
+        path: "{{ application_folder }}"
+        dest: "{{ application_archive }}.tar.bz2"
+        format: "bz2"
+    - fetch:
+        src: "{{ application_archive }}.tar.bz2"
+        dest: "{{ local_tempdir }}"
+        flat: "yes"
+    - file:
+        path: "{{ application_archive }}.tar.bz2"
+        state: "absent"
+
+- name: "Transfer application to destination"
+  hosts: application_destination
+  tasks:
+    - tempfile:
+      register: "remote_tempdir"
+    - copy:
+        src: "{{ local_tempdir }}/{{ application_archive }}.tar.bz2"
+        dest: "{{ remote_tempdir }}"
+    - file:
+        path: "{{ application_folder_destination }}"
+        state: "absent"
+    - unarchive:
+        src: "{{ remote_tempdir }}/{{ application_archive }}.tar.bz2"
+        dest: "{{ application_folder_destination }}"
+
+- name: "Clean up locally"
+  tasks:
+    - file:
+        path: "{{ local_tempdir }}/{{ application_archive }}.tar.bz2"
+        state: "absent"
+
+- name: "Fix application settings"
+#TODO
+
+- name: "Transfer data folder from source"
+  hosts: application_source
+  tasks:
+    - tempfile:
+      register: "data_archive"
+    - archive:
+        path: "{{ data_folder }}"
+        dest: "{{ data_archive }}.tar.bz2"
+        format: "bz2"
+    - fetch:
+        src: "{{ data_archive }}.tar.bz2"
+        dest: "{{ local_tempdir }}"
+        flat: "yes"
+    - file:
+        path: "{{ data_archive }}.tar.bz2"
+        state: "absent"
+#TODO excludes?
+- name: "Transfer data folder to destination"
+  hosts: application_destination
+  tasks:
+    - tempfile:
+      register: "remote_tempdir"
+    - copy:
+        src: "{{ local_tempdir }}/{{ data_archive }}.tar.bz2"
+        dest: "{{ remote_tempdir }}"
+    - file:
+        path: "{{ data_folder_destination }}"
+        state: "absent"
+    - unarchive:
+        src: "{{ remote_tempdir }}/{{ data_archive }}.tar.bz2"
+        dest: "{{ data_folder_destination }}"
+
+- name: "Clean up locally"
+  tasks:
+    - file:
+        path: "{{ local_tempdir }}/{{ data_archive }}.tar.bz2"
+        state: "absent"
+
+#TODO Run update script    
+#TODO Add file transport module
