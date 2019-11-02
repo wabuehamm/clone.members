@@ -32,6 +32,7 @@
         state: "absent"
 
 - name: "Fix database dump"
+  hosts: ansible_master
   tasks:
     - name: "Fix URL"
       replace:
