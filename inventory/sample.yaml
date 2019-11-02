@@ -1,5 +1,8 @@
 playbook:
   hosts:
+    # The master host running the playbook (required for copy/fetch tasks)
+    ansible_master:
+      ansible_connection: local
     # Database hosts
     database_source:
       ansible_host: "FIXME"

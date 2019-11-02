@@ -1,6 +1,7 @@
 # Clone the wabue members area
 
 - name: "Create temporary path"
+  hosts: ansible_master
   tasks:
     - name: "Create temporary path"
       tempfile:
@@ -39,7 +40,7 @@
         replace: "{{ url_destination }}"
     - name: "Fix paths"
       replace:
-        path: "{{ local_tempdir }}/{{ tempfile }}"
+        path: "{{ local_tempdir }}/{{ ^ile }}"
         regexp: "{{ data_folder_source }}"
         replace: "{{ data_folder_destination }}"
 
@@ -67,6 +68,7 @@
         state: "absent"
 
 - name: "Clean up locally"
+  hosts: ansible_master
   tasks:
     - name: "Remove database dump"
       file:
@@ -114,6 +116,7 @@
         dest: "{{ application_folder_destination }}"
 
 - name: "Clean up locally"
+  hosts: ansible_master
   tasks:
     - name: "Remove application archive"
       file:
@@ -188,6 +191,7 @@
         dest: "{{ data_folder_destination }}"
 
 - name: "Clean up locally"
+  hosts: ansible_master
   tasks:
     - name: "Remove data archive"
       file:
