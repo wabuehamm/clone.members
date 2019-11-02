@@ -60,6 +60,8 @@
         state: "directory"
       register: "remote_tempdir"
     - name: "Upload dump"
+      tags:
+        - "uncheckable"
       copy:
         src: "{{ hostvars['ansible_master']['local_tempdir'] }}/database.sql"
         dest: "{{ remote_tempdir }}"
@@ -69,7 +71,7 @@
         login_user: "{{ database_destination_username }}"
         login_password: "{{ database_destination_password }}"
         state: "import"
-        target: "{{ remote_tempdir }}/{{ tempfile }}"
+        target: "{{ remote_tempdir }}/database.sql"
     - name: "Cleanup"
       file:
         path: "{{ remote_tempdir }}"
@@ -78,6 +80,7 @@
 - name: "Clean up locally"
   tags:
     - "database"
+    - "uncheckable"
   hosts: ansible_master
   tasks:
     - name: "Remove database dump"
@@ -117,6 +120,8 @@
       tempfile:
       register: "remote_tempdir"
     - name: "Copy application archive"
+      tags:
+        - "uncheckable"
       copy:
         src: "{{ hostvars['ansible_master']['local_tempdir'] }}/application.tar.bz2"
         dest: "{{ remote_tempdir }}"
@@ -126,12 +131,13 @@
         state: "absent"
     - name: "Unarchive application archive"
       unarchive:
-        src: "{{ remote_tempdir }}"
+        src: "{{ remote_tempdir }}/application.tar.bz2"
         dest: "{{ application_folder_destination }}"
 
 - name: "Clean up locally"
   tags:
     - "application"
+    - "uncheckable"
   hosts: ansible_master
   tasks:
     - name: "Remove application archive"
@@ -200,6 +206,8 @@
       tempfile:
       register: "remote_tempdir"
     - name: "Upload data archive"
+      tags: 
+        - "uncheckable"
       copy:
         src: "{{ hostvars['ansible_master']['local_tempdir'] }}/data.tar.bz2"
         dest: "{{ remote_tempdir }}"
@@ -209,12 +217,13 @@
         state: "absent"
     - name: "Unarchive data archive"
       unarchive:
-        src: "{{ remote_tempdir }}/{{ data_archive }}.tar.bz2"
+        src: "{{ remote_tempdir }}/data.tar.bz2"
         dest: "{{ data_folder_destination }}"
 
 - name: "Clean up locally"
   tags:
     - "data"
+    - "uncheckable"
   hosts: ansible_master
   tasks:
     - name: "Remove data archive"
