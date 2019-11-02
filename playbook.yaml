@@ -36,12 +36,12 @@
   tasks:
     - name: "Fix URL"
       replace:
-        path: "{{ hostvars['ansible_master']['local_tempdir'] }}/database.sql"
+        path: "{{ local_tempdir }}/database.sql"
         regexp: "{{ url_source }}"
         replace: "{{ url_destination }}"
     - name: "Fix paths"
       replace:
-        path: "{{ hostvars['ansible_master']['local_tempdir'] }}/database.sql"
+        path: "{{ local_tempdir }}/database.sql"
         regexp: "{{ data_folder_source }}"
         replace: "{{ data_folder_destination }}"
 
