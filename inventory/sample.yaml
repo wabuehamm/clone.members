@@ -47,4 +47,4 @@ playbook:
     update_tasks:
 
     # Run update sql scripts on the destination database host
-    update_tassk_sql:
+    update_tasks_sql:
