@@ -64,7 +64,7 @@
         - "uncheckable"
       copy:
         src: "{{ hostvars['ansible_master']['local_tempdir'].path }}/database.sql"
-        dest: "{{ remote_tempdir }}"
+        dest: "{{ remote_tempdir.path }}"
     - name: "Import dump"
       mysql_db:
         name: "{{ database_destination_name }}"
@@ -74,7 +74,7 @@
         target: "{{ remote_tempdir.path }}/database.sql"
     - name: "Cleanup"
       file:
-        path: "{{ remote_tempdir }}"
+        path: "{{ remote_tempdir.path }}"
         state: "absent"
 
 - name: "Clean up locally"
@@ -195,7 +195,7 @@
         - "uncheckable"
       fetch:
         src: "{{ data_archive.path }}.tar.bz2"
-        dest: "{{ hostvars['ansible_master']['local_tempdir'] }}/data.tar.bz2"
+        dest: "{{ hostvars['ansible_master']['local_tempdir'].path }}/data.tar.bz2"
         flat: "yes"
     - name: "Cleanup"
       tags:
