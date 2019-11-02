@@ -1,0 +1,159 @@
+- name: "Find bundled mods"
+  find:
+    paths: "{{ application_folder_destination }}"
+    patterns: "manifest.xml"
+    contains: "bundled"
+  register: "bundled_mods_manifests"
+- name: "Remove bundled mods"
+  file:
+    path: "{{ item | dirname }}"
+    state: "absent"
+  loop: "bundled_mods_manifests"
+- name: "Remove superfluous mods"
+  file:
+    path: "{{ application_folder_destination }}/mod/{{ item }}"
+    state: "absent"
+  loop: 
+    - "data_views"
+    - "roles"
+    - "roles_ui"
+    - "user_api"
+    - "discussions_api"
+- name: "Remove unsupported mods"
+  file:
+    path: "{{ application_folder_destination }}/mod/{{ item }}"
+    state: "absent"
+  loop: 
+    - "hypeUI"
+    - "hypeNotifications"
+    - "hypeEmbed"
+    - "hypeLists"
+- name: "Update supported mods and add additional mods"
+  block:
+    - name: "Remove mod"
+      file: 
+        path: "{{ application_folder_destination }}/mod/{{ item['mod'] }}"
+        state: "absent"
+      ignore_errors: "yes"
+    - name: "Download new mod"
+      get_url:
+        url: "{{ item['url'] }}"
+        dest: "{{ application_folder_destination }}/mod"
+    - name: "Unarchive mod"
+      unarchive:
+        src: "{{ application_folder_destination }}/mod/{{ item['archive'] }}"
+        dest: "{{ application_folder_destination }}/mod"
+    - name: "Remove archive"
+      file:
+        path: "{{ application_folder_destination }}/mod/{{ item['archive'] }}"
+        state: "absent"
+    - name: "Rename folder"
+      command: "mv {{ item['rename_from'] }} {{ item['rename_to'] }} chdir={{ application_folder_destination }}/mod"
+      when: "item['rename_from'] is defined and item['rename_to'] is defined"
+  loop:
+    - mod: "autosubscribegroup"
+      url: "https://elgg.org/plugins/download/2915583"
+      archive: "2915583"
+    - mod: "content_subscriptions"
+      url: "https://github.com/ColdTrick/content_subscriptions/releases/download/v6.0.1/content_subscriptions_v6.0.1.zip"
+      archive: "content_subscriptions_v6.0.1.zip"
+    - mod: "elgg_update_services"
+      url: "https://elgg.org/plugins/download/2917092"
+      archive: "2917092"
+    - mod: "favicon_override"
+      url: "https://elgg.org/plugins/download/2915643"
+      archive: "2915643"
+    - mod: "menu_builder"
+      url: "https://elgg.org/plugins/download/2918200"
+      archive: "2918200"
+    - mod: "poll"
+      url: "https://github.com/ColdTrick/poll/releases/download/v4.2/poll_v4.2.zip"
+      archive: "poll_v4.2.zip"
+    - mod: "profile_manager"
+      url: "https://github.com/ColdTrick/profile_manager/releases/download/v15.0/profile_manager_v15.0.zip"
+      archive: "profile_manager_v15.0.zip"
+    - mod: "site_announcements"
+      url: "https://elgg.org/plugins/download/2922421"
+      archive: "2922421"
+    - mod: "login_as"
+      url: "https://github.com/Elgg/login_as/archive/2.0.0.zip"
+      archive: "2.0.0.zip"
+      rename_from: "login_as-2.0.0"
+      rename_to: "login_as"
+    - mod: "ckeditor_extended"
+      url: "https://elgg.org/plugins/download/2918098"
+      archive: "2918098"
+    - mod: "advanced_comments"
+      urk: "https://github.com/ColdTrick/advanced_comments/releases/download/v5.0/advanced_comments_v5.0.zip"
+      archive: "advanced_comments_v5.0.zip"
+- name: "Create tempdir"
+  tempfile:
+    state: "directory"
+  register: "update_tempdir"
+- name: "Install elggv3"
+  block:
+    - name: "Download Elggv3"
+      get_url:
+        url: "https://elgg.org/about/getelgg?forward=elgg-3.2.0.zip"
+        dest: "{{ update_tempdir }}"
+    - name: "Unzip elgg"
+      unarchive:
+        src: "{{ update_tempdir }}/elgg-3.2.0.zip"
+        dest: "{{ update_tempdir }}"
+    - name: "Synchronize elgg vendor directory"
+      synchronize:
+        src: "{{ update_tempdir }}/elgg-3.2.0/vendor/"
+        dest: "{{ application_folder_destination }}/vendor"
+        delete: "yes"
+        recursive: "yes"
+- name: "Reinstall bundled mods"
+  synchronize:
+      src: "{{ update_tempdir }}/elgg-3.2.0/vendor/elgg/elgg/mod/"
+      dest: "{{ application_folder_destination }}/mod"
+      recursive: "yes"
+- name: "Install event_calendar fork"
+  git:
+    repo: "https://github.com/wabuehamm/event_calendar.git"
+    dest: "{{ application_folder_destination }}/mod"
+    version: "issue-14"
+- name: "Install wabue mod"
+  git:
+    repo: "https://github.com/wabuehamm/elgg-plugin-wabue.git"
+    dest: "{{ application_folder_destination }}/mod/wabue"
+    version: "elggv3"
+- name: "Run update"
+  uri:
+    url: "{{ url_destination }}/upgrade.php"
+- name: "Activate new plugins"
+  command: "php vendor/bin/elgg-cli plugins:activate -- ckeditor_extended advanced_comments chdir={{ application_folder_destination }}"
+- name: "Put wabue plugin at the end of the plugin ist"
+  block:
+  - name: "Get token from login page"
+    uri:
+      url: "{{ url_destination }}"
+      return_content: "yes"
+    register: "login_page"
+  - name: "Login to site"
+    uri:
+      url: "{{ url_destination }}/action/login"
+      body_format: form-urlencoded
+      body:
+      - [ "__elgg_token", "{{ login_page.content | regex_search('<input name=\"__elgg_token\" value=\"([^\"]+)\"') }}" ]
+      - [ "__elgg_ts", "{{ login_page.content | regex_search('<input name=\"__elgg_ts\" value=\"([^\"]+)\"') }}" ]
+      - [ "username", "{{ application_admin_username }}" ]
+      - [ "password", "{{ application_admin_password }}" ]
+    register: "logged_in"
+  - name: "Open plugins page"
+    uri:
+      url: "{{ url_destination }}/admin/plugins"
+      return_content: "yes"
+      headers:
+        Cookie: "{{ logged_in.set_cookie }}"
+    register: "plugins_page"
+  - name: "Put wabue plugin at the bottom of the list"
+    uri: 
+      url: "{{ url_destination }}/action/admin/plugins/set_priority?plugin_guid=51&priority=last&{{ url_suffix }}"
+      headers:
+        Cookie: "{{ logged_in.set_cookie }}"
+    vars:
+      url_suffix: "{{ plugins_page | regex_search('set_priority?plugin_guid=51&amp;priority=last&amp;([^\"]+)\"') }}"

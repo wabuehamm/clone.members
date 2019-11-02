@@ -102,7 +102,24 @@
         state: "absent"
 
 - name: "Fix application settings"
-#TODO
+  hosts: application_destination
+  tasks:
+    - replace:
+        path: "{{ application_folder_destination }}/elgg-config/settings.php"
+        regexp: "^.*\\$CONFIG->dbhost.+$"
+        replace: "$CONFIG->dbhost = '{{ database_destination_host }}';"
+    - replace:
+        path: "{{ application_folder_destination }}/elgg-config/settings.php"
+        regexp: "^.*\\$CONFIG->dbname.+$"
+        replace: "$CONFIG->dbname = '{{ database_destination_name }}';"
+    - replace:
+        path: "{{ application_folder_destination }}/elgg-config/settings.php"
+        regexp: "^.*\\$CONFIG->dbuser.+$"
+        replace: "$CONFIG->dbuser = '{{ database_destination_username }}';"
+    - replace:
+        path: "{{ application_folder_destination }}/elgg-config/settings.php"
+        regexp: "^.*\\$CONFIG->dbpass.+$"
+        replace: "$CONFIG->dbpass = '{{ database_destination_password }}';"
 
 - name: "Transfer data folder from source"
   hosts: application_source
@@ -113,6 +130,9 @@
         path: "{{ data_folder }}"
         dest: "{{ data_archive }}.tar.bz2"
         format: "bz2"
+        exclude_path:
+          - "system_cache"
+          - "views_simplecache"
     - fetch:
         src: "{{ data_archive }}.tar.bz2"
         dest: "{{ local_tempdir }}"
@@ -120,7 +140,7 @@
     - file:
         path: "{{ data_archive }}.tar.bz2"
         state: "absent"
-#TODO excludes?
+
 - name: "Transfer data folder to destination"
   hosts: application_destination
   tasks:
@@ -142,5 +162,58 @@
         path: "{{ local_tempdir }}/{{ data_archive }}.tar.bz2"
         state: "absent"
 
-#TODO Run update script    
-#TODO Add file transport module
+- name: "Add file transport module"
+  hosts: application_destination
+  tasks:
+    - name: "Create temporary folder"
+      tempfile:
+        state: "directory"
+      register: "remote_tempdir"
+    - name: "Download file transport module"
+      get_url:
+        url: "https://github.com/wabuehamm/elgg-plugin-filetransport/archive/master.zip"
+        dest: "{{ remote_tempdir }}/master.zip"
+    - name: "Unzip file transport module"
+      unarchive:
+        src: "{{ remote_tempdir }}/master.zip"
+        dest: "{{ remote_tempdir }}"
+    - name: "Move file transport module to module directory"
+      synchronize:
+        src: "{{ remote_tempdir }}/elgg-plugin-filetransport-master/"
+        dest: "{{ application_folder_destination }}/mod/filetransport"
+        recursive: "yes"
+        delete: "yes"
+    - name: "Clean up"
+      file:
+        path: "{{ remote_tempdir }}"
+        state: "absent"
+- name: "Run updates"
+  hosts: application_destination
+  tasks:
+    - name: "Include update tasks"
+      include_tasks:
+        file: "updates/{{ item }}.yaml"
+        loop: "{{ update_tasks }}"
+  when: "{{ update_tasks|length }} > 0"
+- name: "Run database updates"
+  hosts: database_destination
+  tasks:
+    - block:
+      - name: "Create tempfile"
+        tempfile:
+        register: "update_sql_tempfile"
+      - name: "Upload script"
+        src: "updates_sql/{{ item }}.sql"
+        dest: "{{ update_sql_tempfile }}"
+      - name: "Run script"
+        mysql_db:
+          state: "import"
+          name: "{{ database_destination_name }}"
+          login_user: "{{ database_destination_username }}"
+          login_password: "{{ database_destination_password }}"
+          target: "{{ update_sql_tempfile }}"
+      - name: "Cleanup"
+        file:
+          path: "{{ update_sql_tempfile }}"
+          state: "absent"
+      loop: "{{ update_tasks_sql }}"
