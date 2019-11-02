@@ -284,6 +284,7 @@
   tags:
     - "updates"
     - "updates_sql"
+    - "uncheckable"
   hosts: database_destination
   tasks:
     - include_tasks:
