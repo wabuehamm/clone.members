@@ -184,7 +184,7 @@
       register: "data_archive"
     - name: "Archive data folder"
       archive:
-        path: "{{ data_folder }}"
+        path: "{{ data_folder_source }}"
         dest: "{{ data_archive }}.tar.bz2"
         format: "bz2"
         exclude_path:
