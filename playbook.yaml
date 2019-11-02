@@ -40,15 +40,9 @@
   hosts: ansible_master
   tasks:
     - name: "Fix URL"
-      replace:
-        path: "{{ local_tempdir.path }}/database.sql"
-        regexp: "{{ url_source }}"
-        replace: "{{ url_destination }}"
+      command: "sed -i -re 's#{{ url_source }}#{{ url_destination }}#gi' {{ local_tempdir.path }}/database.sql"
     - name: "Fix paths"
-      replace:
-        path: "{{ local_tempdir.path }}/database.sql"
-        regexp: "{{ data_folder_source }}"
-        replace: "{{ data_folder_destination }}"
+      command: "sed -i -re 's#{{ data_folder_source }}#{{ data_folder_destination }}#gi' {{ local_tempdir.path }}/database.sql"
 
 - name: "Restore dump"
   tags:
