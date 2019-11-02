@@ -72,6 +72,8 @@
     state: "directory"
   register: "update_tempdir"
 - name: "Install elggv3"
+  tags:
+    - "uncheckable"
   block:
     - name: "Download Elggv3"
       get_url:
@@ -88,6 +90,8 @@
         delete: "yes"
         recursive: "yes"
 - name: "Reinstall bundled mods"
+  tags:
+    - "uncheckable"
   synchronize:
       src: "{{ update_tempdir }}/elgg-3.2.0/vendor/elgg/elgg/mod/"
       dest: "{{ application_folder_destination }}/mod"
@@ -103,11 +107,17 @@
     dest: "{{ application_folder_destination }}/mod/wabue"
     version: "elggv3"
 - name: "Run update"
+  tags:
+    - "uncheckable"
   uri:
     url: "{{ url_destination }}/upgrade.php"
 - name: "Activate new plugins"
+  tags:
+    - "uncheckable"
   command: "php vendor/bin/elgg-cli plugins:activate -- ckeditor_extended advanced_comments chdir={{ application_folder_destination }}"
 - name: "Put wabue plugin at the end of the plugin ist"
+  tags:
+    - "uncheckable"
   block:
   - name: "Get token from login page"
     uri:
