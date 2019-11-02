@@ -20,27 +20,27 @@
         login_user: "{{ database_source_username }}"
         login_password: "{{ database_source_password }}"
         state: "dump"
-        target: "{{ tempfile }}.bz2"
+        target: "{{ tempfile }}.sql"
     - name: "Download dump"
       fetch:
-        src: "{{ tempfile }}.bz2"
-        dest: "{{ local_tempdir }}"
+        src: "{{ tempfile }}"
+        dest: "{{ hostvars['ansible_master']['local_tempdir'] }}/database.sql"
         flat: "yes"
     - name: "Cleanup"
       file:
-        path: "{{ tempfile }}.bz2"
+        path: "{{ tempfile }}"
         state: "absent"
 
 - name: "Fix database dump"
   tasks:
     - name: "Fix URL"
       replace:
-        path: "{{ local_tempdir }}/{{ tempfile }}"
+        path: "{{ hostvars['ansible_master']['local_tempdir'] }}/database.sql"
         regexp: "{{ url_source }}"
         replace: "{{ url_destination }}"
     - name: "Fix paths"
       replace:
-        path: "{{ local_tempdir }}/{{ ^ile }}"
+        path: "{{ hostvars['ansible_master']['local_tempdir'] }}/database.sql"
         regexp: "{{ data_folder_source }}"
         replace: "{{ data_folder_destination }}"
 
@@ -53,7 +53,7 @@
       register: "remote_tempdir"
     - name: "Upload dump"
       copy:
-        src: "{{ local_tempdir }}/{{ tempfile }}"
+        src: "{{ hostvars['ansible_master']['local_tempdir'] }}/database.sql"
         dest: "{{ remote_tempdir }}"
     - name: "Import dump"
       mysql_db:
@@ -61,7 +61,7 @@
         login_user: "{{ database_destination_username }}"
         login_password: "{{ database_destination_password }}"
         state: "import"
-        target: "{{ remote_tempdir }}/{{ tempfile }}.bz2"
+        target: "{{ remote_tempdir }}/{{ tempfile }}"
     - name: "Cleanup"
       file:
         path: "{{ remote_tempdir }}"
@@ -72,7 +72,7 @@
   tasks:
     - name: "Remove database dump"
       file:
-        path: "{{ local_tempdir }}/{{ tempfile }}"
+        path: "{{ local_tempdir }}/database.sql"
         state: "absent"
 
 - name: "Transfer application from source"
@@ -89,7 +89,7 @@
     - name: "Download application folder"
       fetch:
         src: "{{ application_archive }}.tar.bz2"
-        dest: "{{ local_tempdir }}"
+        dest: "{{ hostvars['ansible_master']['local_tempdir'] }}/application.tar.bz2"
         flat: "yes"
     - name: "Cleanup"
       file:
@@ -104,7 +104,7 @@
       register: "remote_tempdir"
     - name: "Copy application archive"
       copy:
-        src: "{{ local_tempdir }}/{{ application_archive }}.tar.bz2"
+        src: "{{ hostvars['ansible_master']['local_tempdir'] }}/application.tar.bz2"
         dest: "{{ remote_tempdir }}"
     - name: "Remove old application folder"
       file:
@@ -112,7 +112,7 @@
         state: "absent"
     - name: "Unarchive application archive"
       unarchive:
-        src: "{{ remote_tempdir }}/{{ application_archive }}.tar.bz2"
+        src: "{{ remote_tempdir }}"
         dest: "{{ application_folder_destination }}"
 
 - name: "Clean up locally"
@@ -120,7 +120,7 @@
   tasks:
     - name: "Remove application archive"
       file:
-        path: "{{ local_tempdir }}/{{ application_archive }}.tar.bz2"
+        path: "{{ local_tempdir }}/application.tar.bz2"
         state: "absent"
 
 - name: "Fix application settings"
@@ -164,7 +164,7 @@
     - name: "Download data archive"
       fetch:
         src: "{{ data_archive }}.tar.bz2"
-        dest: "{{ local_tempdir }}"
+        dest: "{{ hostvars['ansible_master']['local_tempdir'] }}/data.tar.bz2"
         flat: "yes"
     - name: "Cleanup"
       file:
@@ -179,7 +179,7 @@
       register: "remote_tempdir"
     - name: "Upload data archive"
       copy:
-        src: "{{ local_tempdir }}/{{ data_archive }}.tar.bz2"
+        src: "{{ hostvars['ansible_master']['local_tempdir'] }}/data.tar.bz2"
         dest: "{{ remote_tempdir }}"
     - name: "Remove old data folder"
       file:
@@ -195,7 +195,7 @@
   tasks:
     - name: "Remove data archive"
       file:
-        path: "{{ local_tempdir }}/{{ data_archive }}.tar.bz2"
+        path: "{{ local_tempdir }}/data.tar.bz2"
         state: "absent"
 
 - name: "Add file transport module"
@@ -236,3 +236,11 @@
     - include_tasks:
         file: "tasks/update_tasks_sql.yaml"
       loop: "{{ update_tasks_sql }}"
+
+- name: "Clean up locally"
+  hosts: ansible_master
+  tasks:
+    - name: "Remove local tempdir"
+      file:
+        path: "{{ local_tempdir }}"
+        state: "absent"
