@@ -65,7 +65,7 @@
       url: "https://elgg.org/plugins/download/2918098"
       archive: "2918098"
     - mod: "advanced_comments"
-      urk: "https://github.com/ColdTrick/advanced_comments/releases/download/v5.0/advanced_comments_v5.0.zip"
+      url: "https://github.com/ColdTrick/advanced_comments/releases/download/v5.0/advanced_comments_v5.0.zip"
       archive: "advanced_comments_v5.0.zip"
 - name: "Create tempdir"
   tempfile:
