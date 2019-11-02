@@ -243,6 +243,7 @@
 - name: "Add file transport module"
   tags:
     - "integration"
+    - "uncheckable"
   hosts: application_destination
   tasks:
     - name: "Create temporary folder"
