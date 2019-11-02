@@ -6,9 +6,9 @@
   register: "bundled_mods_manifests"
 - name: "Remove bundled mods"
   file:
-    path: "{{ item | dirname }}"
+    path: "{{ item.path | dirname }}"
     state: "absent"
-  loop: "bundled_mods_manifests"
+  loop: "bundled_mods_manifests.files"
 - name: "Remove superfluous mods"
   file:
     path: "{{ application_folder_destination }}/mod/{{ item }}"
