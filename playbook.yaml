@@ -229,23 +229,6 @@
 - name: "Run database updates"
   hosts: database_destination
   tasks:
-    - block:
-      - name: "Create tempfile"
-        tempfile:
-        register: "update_sql_tempfile"
-      - name: "Upload script"
-        copy:
-          src: "updates_sql/{{ item }}.sql"
-          dest: "{{ update_sql_tempfile }}"
-      - name: "Run script"
-        mysql_db:
-          state: "import"
-          name: "{{ database_destination_name }}"
-          login_user: "{{ database_destination_username }}"
-          login_password: "{{ database_destination_password }}"
-          target: "{{ update_sql_tempfile }}"
-      - name: "Cleanup"
-        file:
-          path: "{{ update_sql_tempfile }}"
-          state: "absent"
+    - include_tasks:
+        file: "tasks/update_tasks_sql.yaml"
       loop: "{{ update_tasks_sql }}"
