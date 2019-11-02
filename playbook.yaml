@@ -117,6 +117,7 @@
   tasks:
     - name: "Create temporary path"
       tempfile:
+        state: "directory"
       register: "remote_tempdir"
     - name: "Copy application archive"
       tags:
@@ -134,6 +135,12 @@
       unarchive:
         src: "{{ remote_tempdir.path }}/application.tar.bz2"
         dest: "{{ application_folder_destination }}"
+    - name: "Cleanup"
+      tags:
+        - "uncheckable"
+      file:
+        path: "{{ remote_tempdir.path }}"
+        state: "absent"
 
 - name: "Clean up locally"
   tags:
