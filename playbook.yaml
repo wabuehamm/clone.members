@@ -9,6 +9,8 @@
       register: "local_tempdir"
 
 - name: "Dump database"
+  tags:
+    - "database"
   hosts: database_source
   tasks:
     - name: "Create temporary file"
@@ -32,6 +34,9 @@
         state: "absent"
 
 - name: "Fix database dump"
+  tags:
+    - "database"
+    - "uncheckable"
   hosts: ansible_master
   tasks:
     - name: "Fix URL"
@@ -46,6 +51,8 @@
         replace: "{{ data_folder_destination }}"
 
 - name: "Restore dump"
+  tags:
+    - "database"
   hosts: database_destination
   tasks:
     - name: "Create temporary directory"
@@ -69,6 +76,8 @@
         state: "absent"
 
 - name: "Clean up locally"
+  tags:
+    - "database"
   hosts: ansible_master
   tasks:
     - name: "Remove database dump"
@@ -77,6 +86,8 @@
         state: "absent"
 
 - name: "Transfer application from source"
+  tags:
+    - "application"
   hosts: application_source
   tasks:
     - name: "Create temporary file"
@@ -98,6 +109,8 @@
         state: "absent"
 
 - name: "Transfer application to destination"
+  tags:
+    - "application"
   hosts: application_destination
   tasks:
     - name: "Create temporary path"
@@ -117,6 +130,8 @@
         dest: "{{ application_folder_destination }}"
 
 - name: "Clean up locally"
+  tags:
+    - "application"
   hosts: ansible_master
   tasks:
     - name: "Remove application archive"
@@ -125,6 +140,8 @@
         state: "absent"
 
 - name: "Fix application settings"
+  tags:
+    - "application"
   hosts: application_destination
   tasks:
     - name: "Add dbhost"
@@ -149,6 +166,8 @@
         line: "$CONFIG->dataroot = '{{ data_folder_destination }}';"
 
 - name: "Transfer data folder from source"
+  tags:
+    - "data"
   hosts: application_source
   tasks:
     - name: "Create temporary file"
@@ -173,6 +192,8 @@
         state: "absent"
 
 - name: "Transfer data folder to destination"
+  tags:
+    - "data"
   hosts: application_destination
   tasks:
     - name: "Create temporary path"
@@ -192,6 +213,8 @@
         dest: "{{ data_folder_destination }}"
 
 - name: "Clean up locally"
+  tags:
+    - "data"
   hosts: ansible_master
   tasks:
     - name: "Remove data archive"
@@ -200,6 +223,8 @@
         state: "absent"
 
 - name: "Add file transport module"
+  tags:
+    - "integration"
   hosts: application_destination
   tasks:
     - name: "Create temporary folder"
@@ -224,14 +249,22 @@
       file:
         path: "{{ remote_tempdir }}"
         state: "absent"
+
 - name: "Run updates"
+  tags:
+    - "updates"
+    - "updates_tasks"
   hosts: application_destination
   tasks:
     - name: "Include update tasks"
       include_tasks:
         file: "updates/{{ item }}.yaml"
       loop: "{{ update_tasks }}"
+
 - name: "Run database updates"
+  tags:
+    - "updates"
+    - "updates_sql"
   hosts: database_destination
   tasks:
     - include_tasks:
