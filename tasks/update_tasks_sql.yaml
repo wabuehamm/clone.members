@@ -4,15 +4,15 @@
 - name: "Upload script"
   copy:
     src: "updates_sql/{{ item }}.sql"
-    dest: "{{ update_sql_tempfile }}"
+    dest: "{{ update_sql_tempfile.path }}"
 - name: "Run script"
   mysql_db:
     state: "import"
     name: "{{ database_destination_name }}"
     login_user: "{{ database_destination_username }}"
     login_password: "{{ database_destination_password }}"
-    target: "{{ update_sql_tempfile }}"
+    target: "{{ update_sql_tempfile.path }}"
 - name: "Cleanup"
   file:
-    path: "{{ update_sql_tempfile }}"
+    path: "{{ update_sql_tempfile.path }}"
     state: "absent"
