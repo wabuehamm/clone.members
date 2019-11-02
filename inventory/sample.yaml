@@ -18,11 +18,13 @@ playbook:
     # Database names and users and database destination host
     database_source_name: "FIXME"
     database_source_username: "FIXME"
-    database_source_password: "!vault secretFIXME"
+    database_source_password: !vault |
+      $ANSIBLE_VAULT;secrets
     database_destination_host: "FIXME"
     database_destination_name: "FIXME"
     database_destination_username: "FIXME"
-    database_destination_password: "!vault secretFIXME"
+    database_destination_password: !vault |
+      $ANSIBLE_VAULT;secrets
 
     # Base URL of source and destination environment
     url_source: "FIXME"
@@ -38,7 +40,11 @@ playbook:
 
     # Application admin username and password
     application_admin_username: "FIXME"
-    application_admin_password: "!vault secretFIXME"
+    application_admin_password: !vault |
+      $ANSIBLE_VAULT;secrets
 
     # Run update tasks on the destination host
     update_tasks:
+
+    # Run update sql scripts on the destination database host
+    update_tassk_sql:
