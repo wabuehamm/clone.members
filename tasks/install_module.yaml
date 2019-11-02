@@ -8,6 +8,8 @@
     url: "{{ item['url'] }}"
     dest: "{{ application_folder_destination }}/mod"
 - name: "Unarchive mod"
+  tags:
+    - "uncheckable"
   unarchive:
     src: "{{ application_folder_destination }}/mod/{{ item['archive'] }}"
     dest: "{{ application_folder_destination }}/mod"
@@ -16,5 +18,7 @@
     path: "{{ application_folder_destination }}/mod/{{ item['archive'] }}"
     state: "absent"
 - name: "Rename folder"
+  tags:
+    - "uncheckable"
   command: "mv {{ item['rename_from'] }} {{ item['rename_to'] }} chdir={{ application_folder_destination }}/mod"
   when: "item['rename_from'] is defined and item['rename_to'] is defined"
