@@ -29,27 +29,8 @@
     - "hypeEmbed"
     - "hypeLists"
 - name: "Update supported mods and add additional mods"
-  block:
-    - name: "Remove mod"
-      file: 
-        path: "{{ application_folder_destination }}/mod/{{ item['mod'] }}"
-        state: "absent"
-      ignore_errors: "yes"
-    - name: "Download new mod"
-      get_url:
-        url: "{{ item['url'] }}"
-        dest: "{{ application_folder_destination }}/mod"
-    - name: "Unarchive mod"
-      unarchive:
-        src: "{{ application_folder_destination }}/mod/{{ item['archive'] }}"
-        dest: "{{ application_folder_destination }}/mod"
-    - name: "Remove archive"
-      file:
-        path: "{{ application_folder_destination }}/mod/{{ item['archive'] }}"
-        state: "absent"
-    - name: "Rename folder"
-      command: "mv {{ item['rename_from'] }} {{ item['rename_to'] }} chdir={{ application_folder_destination }}/mod"
-      when: "item['rename_from'] is defined and item['rename_to'] is defined"
+  include_tasks:
+    file: "tasks/install_module.yaml"
   loop:
     - mod: "autosubscribegroup"
       url: "https://elgg.org/plugins/download/2915583"
