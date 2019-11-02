@@ -44,6 +44,10 @@
       command: "sed -i -re 's#{{ url_source }}#{{ url_destination }}#gi' {{ local_tempdir.path }}/database.sql warn=no"
     - name: "Fix paths"
       command: "sed -i -re 's#{{ data_folder_source }}#{{ data_folder_destination }}#gi' {{ local_tempdir.path }}/database.sql warn=no"
+    - name: "Remove create db line"
+      command: "sed -i -re '/CREATE DATABASE.*/d' {{ local_tempdir.path }}/database.sql warn=no"
+    - name: "Remove use db line"
+      command: "sed -i -re '/USE `.*/d' {{ local_tempdir.path }}/database.sql warn=no"
 
 - name: "Restore dump"
   tags:
