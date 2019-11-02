@@ -130,6 +130,8 @@
         path: "{{ application_folder_destination }}"
         state: "absent"
     - name: "Unarchive application archive"
+      tags:
+        - "uncheckable"
       unarchive:
         src: "{{ remote_tempdir }}/application.tar.bz2"
         dest: "{{ application_folder_destination }}"
@@ -188,11 +190,15 @@
           - "system_cache"
           - "views_simplecache"
     - name: "Download data archive"
+      tags:
+        - "uncheckable"
       fetch:
         src: "{{ data_archive }}.tar.bz2"
         dest: "{{ hostvars['ansible_master']['local_tempdir'] }}/data.tar.bz2"
         flat: "yes"
     - name: "Cleanup"
+      tags:
+        - "uncheckable"
       file:
         path: "{{ data_archive }}.tar.bz2"
         state: "absent"
@@ -216,6 +222,8 @@
         path: "{{ data_folder_destination }}"
         state: "absent"
     - name: "Unarchive data archive"
+      tags:
+        - "uncheckable"
       unarchive:
         src: "{{ remote_tempdir }}/data.tar.bz2"
         dest: "{{ data_folder_destination }}"
