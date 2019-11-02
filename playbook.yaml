@@ -98,7 +98,7 @@
       register: "application_archive"
     - name: "Archive application folder"
       archive:
-        path: "{{ application_folder }}"
+        path: "{{ application_folder_source }}"
         dest: "{{ application_archive }}.tar.bz2"
         format: "bz2"
     - name: "Download application folder"
