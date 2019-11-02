@@ -104,22 +104,21 @@
 - name: "Fix application settings"
   hosts: application_destination
   tasks:
-    - replace:
+    - lineinfile:
         path: "{{ application_folder_destination }}/elgg-config/settings.php"
-        regexp: "^.*\\$CONFIG->dbhost.+$"
-        replace: "$CONFIG->dbhost = '{{ database_destination_host }}';"
-    - replace:
+        line: "$CONFIG->dbhost = '{{ database_destination_host }}';"
+    - lineinfile:
         path: "{{ application_folder_destination }}/elgg-config/settings.php"
-        regexp: "^.*\\$CONFIG->dbname.+$"
-        replace: "$CONFIG->dbname = '{{ database_destination_name }}';"
-    - replace:
+        line: "$CONFIG->dbname = '{{ database_destination_name }}';"
+    - lineinfile:
         path: "{{ application_folder_destination }}/elgg-config/settings.php"
-        regexp: "^.*\\$CONFIG->dbuser.+$"
-        replace: "$CONFIG->dbuser = '{{ database_destination_username }}';"
-    - replace:
+        line: "$CONFIG->dbuser = '{{ database_destination_username }}';"
+    - lineinfile:
         path: "{{ application_folder_destination }}/elgg-config/settings.php"
-        regexp: "^.*\\$CONFIG->dbpass.+$"
-        replace: "$CONFIG->dbpass = '{{ database_destination_password }}';"
+        line: "$CONFIG->dbpass = '{{ database_destination_password }}';"
+    - lineinfile:
+        path: "{{ application_folder_destination }}/elgg-config/settings.php"
+        line: "$CONFIG->dataroot = '{{ data_folder_destination }}';"
 
 - name: "Transfer data folder from source"
   hosts: application_source
