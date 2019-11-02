@@ -8,7 +8,7 @@
   file:
     path: "{{ item.path | dirname }}"
     state: "absent"
-  loop: "bundled_mods_manifests.files"
+  loop: "{{ bundled_mods_manifests.files }}"
 - name: "Remove superfluous mods"
   file:
     path: "{{ application_folder_destination }}/mod/{{ item }}"
