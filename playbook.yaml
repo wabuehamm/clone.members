@@ -150,6 +150,7 @@
 - name: "Fix application settings"
   tags:
     - "application"
+    - "application_settings"
   hosts: application_destination
   tasks:
     - name: "Add dbhost"
