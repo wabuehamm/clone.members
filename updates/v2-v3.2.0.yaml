@@ -29,6 +29,8 @@
     - "hypeNotifications"
     - "hypeEmbed"
     - "hypeLists"
+    - "event_calendar"
+    - "wabue"
 - name: "Update supported mods and add additional mods"
   include_tasks:
     file: "tasks/install_module.yaml"
