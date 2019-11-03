@@ -322,10 +322,6 @@
         delete: "yes"
         owner: "yes"
         group: "yes"
-    - name: "Activate plugin"
-      tags:
-        - "uncheckable"
-      command: "php vendor/bin/elgg-cli plugins:activate -- filetransport chdir={{ application_folder_destination }}"
     - name: "Clean up"
       file:
         path: "{{ remote_tempdir.path }}"
@@ -352,6 +348,11 @@
     - include_tasks:
         file: "tasks/update_tasks_sql.yaml"
       loop: "{{ update_tasks_sql }}"
+
+- name: "Activate filetransport plugin"
+  tags:
+    - "uncheckable"
+  command: "php vendor/bin/elgg-cli plugins:activate -- filetransport chdir={{ application_folder_destination }}"
 
 - name: "Clean up locally"
   tags:
