@@ -68,14 +68,14 @@
     - name: "Download Elggv3"
       get_url:
         url: "https://elgg.org/about/getelgg?forward=elgg-3.2.0.zip"
-        dest: "{{ update_tempdir }}"
+        dest: "{{ update_tempdir.path }}"
     - name: "Unzip elgg"
       unarchive:
         src: "{{ update_tempdir }}/elgg-3.2.0.zip"
-        dest: "{{ update_tempdir }}"
+        dest: "{{ update_tempdir.path }}"
     - name: "Synchronize elgg vendor directory"
       synchronize:
-        src: "{{ update_tempdir }}/elgg-3.2.0/vendor/"
+        src: "{{ update_tempdir.path }}/elgg-3.2.0/vendor/"
         dest: "{{ application_folder_destination }}/vendor"
         delete: "yes"
         recursive: "yes"
@@ -83,7 +83,7 @@
   tags:
     - "uncheckable"
   synchronize:
-      src: "{{ update_tempdir }}/elgg-3.2.0/vendor/elgg/elgg/mod/"
+      src: "{{ update_tempdir.path }}/elgg-3.2.0/vendor/elgg/elgg/mod/"
       dest: "{{ application_folder_destination }}/mod"
       recursive: "yes"
 - name: "Install event_calendar fork"
