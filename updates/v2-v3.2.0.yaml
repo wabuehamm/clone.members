@@ -31,6 +31,14 @@
     - "hypeLists"
     - "event_calendar"
     - "wabue"
+- name: "Create temp directory"
+  tempfile:
+    state: "directory"
+  register: "favicon_temp"
+- name: "Store favicons"
+  synchronize:
+    src: "{{ application_folder_destination }}/mod/favicon_override/graphics/"
+    dest: "{{ favicon_temp.path }}"
 - name: "Update supported mods and add additional mods"
   include_tasks:
     file: "tasks/install_module.yaml"
@@ -59,6 +67,18 @@
       url: "https://elgg.org/plugins/download/2918098"
     - mod: "advanced_comments"
       url: "https://github.com/ColdTrick/advanced_comments/releases/download/v5.0/advanced_comments_v5.0.zip"
+- name: "Restore favicons"
+  synchronize:
+    src: "{{ favicon_temp.path }}/"
+    dest: "{{ application_folder_destination }}/mod/favicon_override/graphics"
+  tags:
+    - "uncheckable"
+- name: "Cleanup favicon temp"
+  file:
+    path: "{{ favicon_temp.path }}"
+    state: "absent"
+  tags:
+    - "uncheckable"
 - name: "Create tempdir"
   tempfile:
     state: "directory"
@@ -124,3 +144,7 @@
   tags:
     - "uncheckable"
   command: "php vendor/bin/elgg-cli wabue:prioritize chdir={{ application_folder_destination }}"
+- name: "Configure plugins"
+  tags:
+    - "uncheckable"
+  command: "php vendor/bin/elgg-cli wabue:configure chdir={{ application_folder_destination }}"
