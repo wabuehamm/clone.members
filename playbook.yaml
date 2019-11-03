@@ -144,8 +144,13 @@
       unarchive:
         src: "{{ remote_tempdir.path }}/application.tar.bz2"
         dest: "{{ application_folder_destination }}"
+    - name: "Set owner of event_calendar fork"
+      file:
+        path: "{{ application_folder_destination }}"
         owner: "{{ owner_destination }}"
         group: "{{ group_destination }}"
+        state: "directory"
+        recurse: "yes"
     - name: "Cleanup"
       tags:
         - "uncheckable"
@@ -251,8 +256,13 @@
       unarchive:
         src: "{{ remote_tempdir.path }}/data.tar.bz2"
         dest: "{{ data_folder_destination }}"
+    - name: "Set owner of event_calendar fork"
+      file:
+        path: "{{ data_folder_destination }}"
         owner: "{{ owner_destination }}"
         group: "{{ group_destination }}"
+        state: "directory"
+        recurse: "yes"
     - name: "Clean up"
       tags:
         - "uncheckable"
