@@ -41,11 +41,6 @@ playbook:
     application_folder_source: "FIXME"
     application_folder_destination: "FIXME"
 
-    # Application admin username and password
-    application_admin_username: "FIXME"
-    application_admin_password: !vault |
-      $ANSIBLE_VAULT;secrets
-
     # Run update tasks on the destination host
     update_tasks:
 

@@ -157,13 +157,6 @@
       unarchive:
         src: "{{ remote_tempdir.path }}/application.tar.bz2"
         dest: "{{ application_folder_destination }}"
-    - name: "Set owner of event_calendar fork"
-      file:
-        path: "{{ application_folder_destination }}"
-        owner: "{{ owner_destination }}"
-        group: "{{ group_destination }}"
-        state: "directory"
-        recurse: "yes"
     - name: "Cleanup"
       tags:
         - "uncheckable"
@@ -357,6 +350,24 @@
   tasks:
     - name: "Activate filetransport plugin"
       command: "php vendor/bin/elgg-cli plugins:activate -- filetransport chdir={{ application_folder_destination }}"
+
+- name: "Fix ownership"
+  hosts: application_destination
+  tasks:
+    - name: "Set owner of application folder"
+      file:
+        path: "{{ application_folder_destination }}"
+        owner: "{{ owner_destination }}"
+        group: "{{ group_destination }}"
+        state: "directory"
+        recurse: "yes"
+    - name: "Set owner of data folder"
+      file:
+        path: "{{ data_folder_destination }}"
+        owner: "{{ owner_destination }}"
+        group: "{{ group_destination }}"
+        state: "directory"
+        recurse: "yes"
 
 - name: "Clean up locally"
   tags:
