@@ -350,8 +350,10 @@
       loop: "{{ update_tasks_sql }}"
 
 - name: "Activate filetransport plugin"
+  hosts: application_destination
   tags:
     - "uncheckable"
+    - "integration"
   command: "php vendor/bin/elgg-cli plugins:activate -- filetransport chdir={{ application_folder_destination }}"
 
 - name: "Clean up locally"
