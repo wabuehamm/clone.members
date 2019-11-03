@@ -1,23 +1,23 @@
-- name: "Remove mod"
+- name: "{{ item['mod'] }} - Remove mod"
   file: 
     path: "{{ application_folder_destination }}/mod/{{ item['mod'] }}"
     state: "absent"
   ignore_errors: "yes"
-- name: "Download new mod"
+- name: "{{ item['mod'] }} - Download new mod"
   get_url:
     url: "{{ item['url'] }}"
     dest: "{{ application_folder_destination }}/mod/download_module"
-- name: "Unarchive mod"
+- name: "{{ item['mod'] }} - Unarchive mod"
   tags:
     - "uncheckable"
   unarchive:
     src: "{{ application_folder_destination }}/mod/download_module"
     dest: "{{ application_folder_destination }}/mod"
-- name: "Remove archive"
+- name: "{{ item['mod'] }} - Remove archive"
   file:
     path: "{{ application_folder_destination }}/mod/download_module"
     state: "absent"
-- name: "Rename folder"
+- name: "{{ item['mod'] }} - Rename folder"
   tags:
     - "uncheckable"
   command: "mv {{ item['rename_from'] }} {{ item['rename_to'] }} chdir={{ application_folder_destination }}/mod"
