@@ -93,16 +93,31 @@
     repo: "https://github.com/wabuehamm/event_calendar.git"
     dest: "{{ application_folder_destination }}/mod/event_calendar"
     version: "issue-14"
+- name: "Set owner of event_calendar fork"
+  file:
+    path: "{{ application_folder_destination }}/mod/event_calendar"
+    owner: "{{ owner_destination }}"
+    group: "{{ group_destination }}"
+    state: "directory"
+    recurse: "yes"
 - name: "Install wabue mod"
   git:
     repo: "https://github.com/wabuehamm/elgg-plugin-wabue.git"
     dest: "{{ application_folder_destination }}/mod/wabue"
     version: "elggv3"
+- name: "Set owner of wabue fork"
+  file:
+    path: "{{ application_folder_destination }}/mod/wabue"
+    owner: "{{ owner_destination }}"
+    group: "{{ group_destination }}"
+    state: "directory"
+    recurse: "yes"
 - name: "Run update"
   tags:
     - "uncheckable"
   uri:
     url: "{{ url_destination }}/upgrade.php"
+    timeout: "600"
 - name: "Activate new plugins"
   tags:
     - "uncheckable"

@@ -144,6 +144,8 @@
       unarchive:
         src: "{{ remote_tempdir.path }}/application.tar.bz2"
         dest: "{{ application_folder_destination }}"
+        owner: "{{ owner_destination }}"
+        group: "{{ group_destination }}"
     - name: "Cleanup"
       tags:
         - "uncheckable"
@@ -249,6 +251,8 @@
       unarchive:
         src: "{{ remote_tempdir.path }}/data.tar.bz2"
         dest: "{{ data_folder_destination }}"
+        owner: "{{ owner_destination }}"
+        group: "{{ group_destination }}"
     - name: "Clean up"
       tags:
         - "uncheckable"
@@ -285,12 +289,16 @@
       unarchive:
         src: "{{ remote_tempdir.path }}/master.zip"
         dest: "{{ remote_tempdir.path }}"
+        owner: "{{ owner_destination }}"
+        group: "{{ group_destination }}"
     - name: "Move file transport module to module directory"
       synchronize:
         src: "{{ remote_tempdir.path }}/elgg-plugin-filetransport-master/"
         dest: "{{ application_folder_destination }}/mod/filetransport"
         recursive: "yes"
         delete: "yes"
+        owner: "yes"
+        group: "yes"
     - name: "Clean up"
       file:
         path: "{{ remote_tempdir.path }}"

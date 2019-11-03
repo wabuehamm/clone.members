@@ -51,3 +51,7 @@ playbook:
 
     # Run update sql scripts on the destination database host
     update_tasks_sql:
+
+    # Owner and group that should be set on the application and data paths on destijnation
+    owner_destination: "www-data"
+    group_destination: "www-data"
