@@ -71,7 +71,7 @@
         dest: "{{ update_tempdir.path }}"
     - name: "Unzip elgg"
       unarchive:
-        src: "{{ update_tempdir }}/elgg-3.2.0.zip"
+        src: "{{ update_tempdir.path }}/elgg-3.2.0.zip"
         dest: "{{ update_tempdir.path }}"
     - name: "Synchronize elgg vendor directory"
       synchronize:
