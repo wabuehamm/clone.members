@@ -99,7 +99,9 @@
       register: "application_archive"
     - name: "Archive application folder"
       archive:
-        path: "{{ application_folder_source }}"
+        path: 
+          - "{{ application_folder_source }}/*"
+          - "{{ application_folder_source }}/.htaccess"
         dest: "{{ application_archive.path }}.tar.bz2"
         format: "bz2"
     - name: "Download application folder"
@@ -197,7 +199,7 @@
       register: "data_archive"
     - name: "Archive data folder"
       archive:
-        path: "{{ data_folder_source }}"
+        path: "{{ data_folder_source }}/*"
         dest: "{{ data_archive.path }}.tar.bz2"
         format: "bz2"
         exclude_path:
