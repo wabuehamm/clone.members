@@ -139,7 +139,7 @@
 - name: "Activate new plugins"
   tags:
     - "uncheckable"
-  command: "php vendor/bin/elgg-cli plugins:activate -- ckeditor_extended advanced_comments chdir={{ application_folder_destination }}"
+  command: "php vendor/bin/elgg-cli plugins:activate -- ckeditor ckeditor_extended advanced_comments chdir={{ application_folder_destination }}"
 - name: "Put wabue plugin at the end of the plugin ist"
   tags:
     - "uncheckable"
