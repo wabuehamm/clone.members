@@ -226,6 +226,7 @@
   tasks:
     - name: "Create temporary path"
       tempfile:
+        state: "directory"
       register: "remote_tempdir"
     - name: "Upload data archive"
       tags: 
@@ -248,6 +249,12 @@
       unarchive:
         src: "{{ remote_tempdir.path }}/data.tar.bz2"
         dest: "{{ data_folder_destination }}"
+    - name: "Clean up"
+      tags:
+        - "uncheckable"
+      file:
+        path: "{{ remote_tempdir.path }}"
+        state: "absent"
 
 - name: "Clean up locally"
   tags:
