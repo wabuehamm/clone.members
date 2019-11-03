@@ -62,12 +62,23 @@
       tempfile:
         state: "directory"
       register: "remote_tempdir"
+    - name: "Upload clean script"
+      template:
+        dest: "{{ remote_tempdir.path }}/dropAllTables.sql"
+        src: "templates/dropAllTables.sql.jinja"
     - name: "Upload dump"
       tags:
         - "uncheckable"
       copy:
         src: "{{ hostvars['ansible_master']['local_tempdir'].path }}/database.sql"
         dest: "{{ remote_tempdir.path }}"
+    - name: "Clean database"
+      mysql_db:
+        name: "{{ database_destination_name }}"
+        login_user: "{{ database_destination_username }}"
+        login_password: "{{ database_destination_password }}"
+        state: "import"
+        target: "{{ remote_tempdir.path }}/dropAllTables.sql"
     - name: "Import dump"
       mysql_db:
         name: "{{ database_destination_name }}"
