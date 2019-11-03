@@ -354,7 +354,9 @@
   tags:
     - "uncheckable"
     - "integration"
-  command: "php vendor/bin/elgg-cli plugins:activate -- filetransport chdir={{ application_folder_destination }}"
+  tasks:
+    - name: "Activate filetransport plugin"
+      command: "php vendor/bin/elgg-cli plugins:activate -- filetransport chdir={{ application_folder_destination }}"
 
 - name: "Clean up locally"
   tags:
