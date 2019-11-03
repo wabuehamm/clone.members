@@ -131,6 +131,11 @@
       file:
         path: "{{ application_folder_destination }}"
         state: "absent"
+    - name: "Recreate old application folder"
+      file:
+        path: "{{ application_folder_destination }}"
+        state: "directory"
+        recurse: "yes"
     - name: "Unarchive application archive"
       tags:
         - "uncheckable"
@@ -230,6 +235,11 @@
       file:
         path: "{{ data_folder_destination }}"
         state: "absent"
+    - name: "Create data folder"
+      file:
+        path: "{{ data_folder_destination }}"
+        state: "directory"
+        recurse: "yes"
     - name: "Unarchive data archive"
       tags:
         - "uncheckable"
