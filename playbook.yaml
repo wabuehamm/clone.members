@@ -2,6 +2,8 @@
 
 - name: "Create temporary path"
   hosts: ansible_master
+  tags:
+    - "always"
   tasks:
     - name: "Create temporary path"
       tempfile:
@@ -298,6 +300,8 @@
       loop: "{{ update_tasks_sql }}"
 
 - name: "Clean up locally"
+  tags:
+    - "always"
   hosts: ansible_master
   tasks:
     - name: "Remove local tempdir"
