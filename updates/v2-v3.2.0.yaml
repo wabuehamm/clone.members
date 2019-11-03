@@ -1,8 +1,9 @@
 - name: "Find bundled mods"
   find:
-    paths: "{{ application_folder_destination }}"
+    paths: "{{ application_folder_destination }}/mod"
     patterns: "manifest.xml"
     contains: "bundled"
+    recurse: "yes"
   register: "bundled_mods_manifests"
 - name: "Remove bundled mods"
   file:
