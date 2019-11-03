@@ -115,9 +115,7 @@
 - name: "Run update"
   tags:
     - "uncheckable"
-  uri:
-    url: "{{ url_destination }}/upgrade.php"
-    timeout: "600"
+  command: "php vendor/bin/elgg-cli upgrade async -v chdir={{ application_folder_destination }}"
 - name: "Activate new plugins"
   tags:
     - "uncheckable"
