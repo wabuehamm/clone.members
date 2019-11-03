@@ -6,16 +6,16 @@
 - name: "Download new mod"
   get_url:
     url: "{{ item['url'] }}"
-    dest: "{{ application_folder_destination }}/mod"
+    dest: "{{ application_folder_destination }}/mod/download_module"
 - name: "Unarchive mod"
   tags:
     - "uncheckable"
   unarchive:
-    src: "{{ application_folder_destination }}/mod/{{ item['archive'] }}"
+    src: "{{ application_folder_destination }}/mod/download_module"
     dest: "{{ application_folder_destination }}/mod"
 - name: "Remove archive"
   file:
-    path: "{{ application_folder_destination }}/mod/{{ item['archive'] }}"
+    path: "{{ application_folder_destination }}/mod/download_module"
     state: "absent"
 - name: "Rename folder"
   tags:
