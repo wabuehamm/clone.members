@@ -44,8 +44,10 @@
     # Uses sed command instead of replace because auf https://github.com/ansible/ansible/issues/64353
     - name: "Fix URL"
       command: "sed -i -re 's#{{ url_source }}#{{ url_destination }}#gi' {{ local_tempdir.path }}/database.sql warn=no"
-    - name: "Fix paths"
+    - name: "Fix data path"
       command: "sed -i -re 's#{{ data_folder_source }}#{{ data_folder_destination }}#gi' {{ local_tempdir.path }}/database.sql warn=no"
+    - name: "Fix application path"
+      command: "sed -i -re 's#{{ application_folder_source }}#{{ application_folder_destination }}#gi' {{ local_tempdir.path }}/database.sql warn=no"
     - name: "Remove create db line"
       command: "sed -i -re '/CREATE DATABASE.*/d' {{ local_tempdir.path }}/database.sql warn=no"
     - name: "Remove use db line"
