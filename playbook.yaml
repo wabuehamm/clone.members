@@ -351,24 +351,6 @@
     - name: "Activate filetransport plugin"
       command: "php vendor/bin/elgg-cli plugins:activate -- filetransport chdir={{ application_folder_destination }}"
 
-- name: "Fix ownership"
-  hosts: application_destination
-  tasks:
-    - name: "Set owner of application folder"
-      file:
-        path: "{{ application_folder_destination }}"
-        owner: "{{ owner_destination }}"
-        group: "{{ group_destination }}"
-        state: "directory"
-        recurse: "yes"
-    - name: "Set owner of data folder"
-      file:
-        path: "{{ data_folder_destination }}"
-        owner: "{{ owner_destination }}"
-        group: "{{ group_destination }}"
-        state: "directory"
-        recurse: "yes"
-
 - name: "Configure plugins"
   hosts: application_destination
   tags:
@@ -392,6 +374,24 @@
     - name: "Set announcement banner"
       command: "php vendor/bin/elgg-cli wabue:announcement -- '{{ announcement }}' chdir={{ application_folder_destination }}"
       when: announcement != ""
+
+- name: "Fix ownership"
+  hosts: application_destination
+  tasks:
+    - name: "Set owner of application folder"
+      file:
+        path: "{{ application_folder_destination }}"
+        owner: "{{ owner_destination }}"
+        group: "{{ group_destination }}"
+        state: "directory"
+        recurse: "yes"
+    - name: "Set owner of data folder"
+      file:
+        path: "{{ data_folder_destination }}"
+        owner: "{{ owner_destination }}"
+        group: "{{ group_destination }}"
+        state: "directory"
+        recurse: "yes"
 
 - name: "Clean up locally"
   tags:
