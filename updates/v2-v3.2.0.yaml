@@ -148,3 +148,12 @@
   tags:
     - "uncheckable"
   command: "php vendor/bin/elgg-cli wabue:configure chdir={{ application_folder_destination }}"
+- name: "Add dbcharset configuration"
+  lineinfile:
+    path: "{{ application_folder_destination }}/elgg-config/settings.php"
+    line: "$CONFIG->dbencoding = 'utf8mb4';"
+- name: "Fix .htaccess default rewrite"
+  replace:
+    path: "{{ application_folder_destination }}/.htaccess"
+    regexp: "RewriteRule .*__elgg_uri.*"
+    replace: "RewriteRule ^(.*)$ index.php [QSA,L]"
