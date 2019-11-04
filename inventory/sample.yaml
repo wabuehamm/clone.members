@@ -50,3 +50,6 @@ playbook:
     # Owner and group that should be set on the application and data paths on destijnation
     owner_destination: "www-data"
     group_destination: "www-data"
+
+    # An announcement to set
+    announcement: ""

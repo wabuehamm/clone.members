@@ -369,6 +369,16 @@
         state: "directory"
         recurse: "yes"
 
+- name: "Set announcement banner"
+  hosts: application_destination
+  tags:
+    - "uncheckable"
+    - "integration"
+  tasks:
+    - name: "Set announcement banner"
+      command: "php vendor/bin/elgg-cli wabue:announcement -- '{{ announcement }}' chdir={{ application_folder_destination }}"
+      when: announcement != ""
+
 - name: "Clean up locally"
   tags:
     - "always"
