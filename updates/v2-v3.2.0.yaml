@@ -7,12 +7,14 @@
   register: "bundled_mods_manifests"
 - name: "Remove bundled mods"
   file:
-    path: "{{ item.path | dirname }}"
+    path: "{{ bundled_mods_manifest.path | dirname }}"
     state: "absent"
   loop: "{{ bundled_mods_manifests.files }}"
+  loop_control:
+    loop_var: "bundled_mods_manifest"
 - name: "Remove superfluous mods"
   file:
-    path: "{{ application_folder_destination }}/mod/{{ item }}"
+    path: "{{ application_folder_destination }}/mod/{{ superfluous_mod }}"
     state: "absent"
   loop: 
     - "data_views"
@@ -20,9 +22,11 @@
     - "roles_ui"
     - "user_api"
     - "discussions_api"
+  loop_control:
+    loop_var: "superfluous_mod"
 - name: "Remove unsupported mods"
   file:
-    path: "{{ application_folder_destination }}/mod/{{ item }}"
+    path: "{{ application_folder_destination }}/mod/{{ unsupported_mod }}"
     state: "absent"
   loop: 
     - "hypeUI"
@@ -31,6 +35,8 @@
     - "hypeLists"
     - "event_calendar"
     - "wabue"
+  loop_control:
+    loop_var: "unsupported_mod"
 - name: "Create temp directory"
   tempfile:
     state: "directory"
@@ -67,6 +73,8 @@
       url: "https://elgg.org/plugins/download/2918098"
     - mod: "advanced_comments"
       url: "https://github.com/ColdTrick/advanced_comments/releases/download/v5.0/advanced_comments_v5.0.zip"
+  loop_control:
+    loop_var: "module"
 - name: "Restore favicons"
   synchronize:
     src: "{{ favicon_temp.path }}/"

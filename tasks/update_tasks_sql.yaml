@@ -3,7 +3,7 @@
   register: "update_sql_tempfile"
 - name: "Upload script"
   copy:
-    src: "updates_sql/{{ item }}.sql"
+    src: "updates_sql/{{ update_task_sql }}.sql"
     dest: "{{ update_sql_tempfile.path }}"
 - name: "Run script"
   mysql_db:

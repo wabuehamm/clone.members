@@ -328,8 +328,10 @@
   tasks:
     - name: "Include update tasks"
       include_tasks:
-        file: "updates/{{ item }}.yaml"
+        file: "updates/{{ update_task }}.yaml"
       loop: "{{ update_tasks }}"
+      loop_control:
+        loop_var: "update_task"
 
 - name: "Run database updates"
   tags:
@@ -341,6 +343,8 @@
     - include_tasks:
         file: "tasks/update_tasks_sql.yaml"
       loop: "{{ update_tasks_sql }}"
+      loop_control:
+        loop_var: "update_task_sql"
 
 - name: "Activate filetransport plugin"
   hosts: application_destination

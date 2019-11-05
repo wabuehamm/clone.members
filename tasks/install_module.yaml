@@ -1,13 +1,13 @@
-- name: "{{ item['mod'] }} - Remove mod"
+- name: "{{ module['mod'] }} - Remove mod"
   file: 
-    path: "{{ application_folder_destination }}/mod/{{ item['mod'] }}"
+    path: "{{ application_folder_destination }}/mod/{{ module['mod'] }}"
     state: "absent"
   ignore_errors: "yes"
-- name: "{{ item['mod'] }} - Download new mod"
+- name: "{{ module['mod'] }} - Download new mod"
   get_url:
-    url: "{{ item['url'] }}"
+    url: "{{ module['url'] }}"
     dest: "{{ application_folder_destination }}/mod/download_module"
-- name: "{{ item['mod'] }} - Unarchive mod"
+- name: "{{ module['mod'] }} - Unarchive mod"
   tags:
     - "uncheckable"
   unarchive:
@@ -15,12 +15,12 @@
     dest: "{{ application_folder_destination }}/mod"
     owner: "{{ owner_destination }}"
     group: "{{ group_destination }}"
-- name: "{{ item['mod'] }} - Remove archive"
+- name: "{{ module['mod'] }} - Remove archive"
   file:
     path: "{{ application_folder_destination }}/mod/download_module"
     state: "absent"
-- name: "{{ item['mod'] }} - Rename folder"
+- name: "{{ module['mod'] }} - Rename folder"
   tags:
     - "uncheckable"
-  command: "mv {{ item['rename_from'] }} {{ item['rename_to'] }} chdir={{ application_folder_destination }}/mod"
-  when: "item['rename_from'] is defined and item['rename_to'] is defined"
+  command: "mv {{ module['rename_from'] }} {{ module['rename_to'] }} chdir={{ application_folder_destination }}/mod"
+  when: "module['rename_from'] is defined and module['rename_to'] is defined"
