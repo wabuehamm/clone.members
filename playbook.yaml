@@ -32,7 +32,7 @@
         flat: "yes"
     - name: "Cleanup"
       file:
-        path: "{{ tempfile }}"
+        path: "{{ tempfile.path }}"
         state: "absent"
 
 - name: "Fix database dump"

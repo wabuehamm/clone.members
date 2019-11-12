@@ -109,6 +109,10 @@
         dest: "{{ application_folder_destination }}/vendor"
         delete: "yes"
         recursive: "yes"
+    - name: "Clean up"
+      file:
+        path: "{{ update_tempdir.path }}"
+        state: "absent"
 - name: "Reinstall bundled mods"
   tags:
     - "uncheckable"
