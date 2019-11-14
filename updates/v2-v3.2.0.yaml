@@ -109,10 +109,6 @@
         dest: "{{ application_folder_destination }}/vendor"
         delete: "yes"
         recursive: "yes"
-    - name: "Clean up"
-      file:
-        path: "{{ update_tempdir.path }}"
-        state: "absent"
 - name: "Reinstall bundled mods"
   tags:
     - "uncheckable"
@@ -120,6 +116,10 @@
       src: "{{ update_tempdir.path }}/elgg-3.2.0/vendor/elgg/elgg/mod/"
       dest: "{{ application_folder_destination }}/mod"
       recursive: "yes"
+- name: "Clean up"
+  file:
+    path: "{{ update_tempdir.path }}"
+    state: "absent"
 - name: "Install event_calendar fork"
   git:
     repo: "https://github.com/wabuehamm/event_calendar.git"
