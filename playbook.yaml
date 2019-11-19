@@ -145,15 +145,18 @@
       copy:
         src: "{{ hostvars['ansible_master']['local_tempdir'].path }}/application.tar.bz2"
         dest: "{{ remote_tempdir.path }}"
-    - name: "Remove old application folder"
-      file:
-        path: "{{ application_folder_destination }}"
-        state: "absent"
-    - name: "Recreate old application folder"
-      file:
-        path: "{{ application_folder_destination }}"
-        state: "directory"
+    - name: "Find items in application folder"
+      find:
+        paths: "{{ application_folder_destination }}"
+        file_type: "any" 
+        hidden: "yes"
         recurse: "yes"
+      register: "application_items"
+    - name: "Empty application folder"
+      file:
+        path: "{{ item }}"
+        state: "absent"
+      with_items: "application_items"
     - name: "Unarchive application archive"
       tags:
         - "uncheckable"
@@ -251,15 +254,18 @@
       copy:
         src: "{{ hostvars['ansible_master']['local_tempdir'].path }}/data.tar.bz2"
         dest: "{{ remote_tempdir.path }}"
-    - name: "Remove old data folder"
-      file:
-        path: "{{ data_folder_destination }}"
-        state: "absent"
-    - name: "Create data folder"
-      file:
-        path: "{{ data_folder_destination }}"
-        state: "directory"
+    - name: "Find items in data folder"
+      find:
+        paths: "{{ data_folder_destination }}"
+        file_type: "any" 
+        hidden: "yes"
         recurse: "yes"
+      register: "data_items"
+    - name: "Empty data folder"
+      file:
+        path: "{{ item }}"
+        state: "absent"
+      with_items: "data_items"
     - name: "Unarchive data archive"
       tags:
         - "uncheckable"
