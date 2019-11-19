@@ -299,39 +299,13 @@
         state: "absent"
 
 - name: "Add file transport module"
-  tags:
-    - "integration"
-    - "uncheckable"
-  hosts: application_destination
-  tasks:
-    - name: "Create temporary folder"
-      tempfile:
-        state: "directory"
-      register: "remote_tempdir"
-    - name: "Download file transport module"
-      get_url:
-        url: "https://github.com/wabuehamm/elgg-plugin-filetransport/archive/master.zip"
-        dest: "{{ remote_tempdir.path }}/master.zip"
-    - name: "Unzip file transport module"
-      unarchive:
-        src: "{{ remote_tempdir.path }}/master.zip"
-        dest: "{{ remote_tempdir.path }}"
-        owner: "{{ owner_destination }}"
-        group: "{{ group_destination }}"
-        remote_src: "yes"
-    - name: "Move file transport module to module directory"
-      synchronize:
-        src: "{{ remote_tempdir.path }}/elgg-plugin-filetransport-master/"
-        dest: "{{ application_folder_destination }}/mod/filetransport"
-        recursive: "yes"
-        delete: "yes"
-        owner: "yes"
-        group: "yes"
-    - name: "Clean up"
-      file:
-        path: "{{ remote_tempdir.path }}"
-        state: "absent"
-
+  include_tasks:
+    file: "tasks/install_module.yaml"
+  loop:
+    - mod: "filetransport"
+      url: "https://github.com/wabuehamm/elgg-plugin-filetransport/archive/master.zip"
+      rename_to: "filetransport"
+      
 - name: "Run updates"
   tags:
     - "updates"
