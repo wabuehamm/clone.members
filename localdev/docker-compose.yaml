@@ -1,0 +1,16 @@
+version: "3.7"
+services:
+    db:
+      image: "mariadb:10"
+      environment: 
+        MYSQL_ROOT_PASSWORD: "secret"
+        MYSQL_DATABASE: "mitglieder"
+        MYSQL_USER: "mitglieder"
+        MYSQL_PASSWORD: "mitglieder"
+    web:
+      image: "wabuehamm/web.members:latest"
+      volumes:
+        - "./localdev/site:/var/www/localhost/htdocs:cached"
+        - "./localdev/data:/srv/elgg_data:cached"
+      ports:
+        - "8443:8443"
