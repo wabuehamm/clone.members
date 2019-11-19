@@ -308,6 +308,8 @@
         - mod: "filetransport"
           url: "https://github.com/wabuehamm/elgg-plugin-filetransport/archive/master.zip"
           rename_to: "filetransport"
+      loop_control:
+        loop_var: "module"
 
 - name: "Run updates"
   tags:
