@@ -15,6 +15,7 @@
     dest: "{{ application_folder_destination }}/mod"
     owner: "{{ owner_destination }}"
     group: "{{ group_destination }}"
+    remote_src: "yes"
 - name: "{{ module['mod'] }} - Remove archive"
   file:
     path: "{{ application_folder_destination }}/mod/download_module"

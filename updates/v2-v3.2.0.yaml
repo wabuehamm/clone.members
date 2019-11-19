@@ -103,6 +103,7 @@
       unarchive:
         src: "{{ update_tempdir.path }}/elgg-3.2.0.zip"
         dest: "{{ update_tempdir.path }}"
+        remote_src: "yes"
     - name: "Synchronize elgg vendor directory"
       synchronize:
         src: "{{ update_tempdir.path }}/elgg-3.2.0/vendor/"
