@@ -10,7 +10,7 @@ services:
     web:
       image: "wabuehamm/web.members:latest"
       volumes:
-        - "./localdev/site:/var/www/localhost/htdocs:cached"
-        - "./localdev/data:/srv/elgg_data:cached"
+        - "./site:/var/www/localhost/htdocs:cached"
+        - "./data:/srv/elgg_data:cached"
       ports:
         - "8443:8443"
