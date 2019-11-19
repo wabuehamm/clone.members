@@ -154,7 +154,7 @@
       register: "application_items"
     - name: "Empty application folder"
       file:
-        path: "{{ item }}"
+        path: "{{ item.path }}"
         state: "absent"
       with_items: "application_items"
     - name: "Unarchive application archive"
@@ -263,7 +263,7 @@
       register: "data_items"
     - name: "Empty data folder"
       file:
-        path: "{{ item }}"
+        path: "{{ item.path }}"
         state: "absent"
       with_items: "data_items"
     - name: "Unarchive data archive"
