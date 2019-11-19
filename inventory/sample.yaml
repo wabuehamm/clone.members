@@ -18,7 +18,8 @@ playbook:
       ansible_host: "FIXME"
       ansible_user: "FIXME"
   vars:
-    # Database names and users and database destination host
+    # Database hosts, names and users
+    database_source_host: "localhost"
     database_source_name: "FIXME"
     database_source_username: "FIXME"
     database_source_password: !vault |

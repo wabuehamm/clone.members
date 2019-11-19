@@ -21,6 +21,7 @@
     - name: "Dump database"
       mysql_db:
         name: "{{ database_source_name }}"
+        login_host: "{{ database_source_host }}"
         login_user: "{{ database_source_username }}"
         login_password: "{{ database_source_password }}"
         state: "dump"
@@ -75,6 +76,7 @@
     - name: "Clean database"
       mysql_db:
         name: "{{ database_destination_name }}"
+        login_host: "{{ database_destination_host }}"
         login_user: "{{ database_destination_username }}"
         login_password: "{{ database_destination_password }}"
         state: "import"
@@ -82,6 +84,7 @@
     - name: "Import dump"
       mysql_db:
         name: "{{ database_destination_name }}"
+        login_host: "{{ database_destination_host }}"
         login_user: "{{ database_destination_username }}"
         login_password: "{{ database_destination_password }}"
         state: "import"
