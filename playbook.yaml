@@ -301,12 +301,13 @@
 - name: "Add file transport module"
   hosts: application_destination
   tasks:
-    include_tasks:
-      file: "tasks/install_module.yaml"
-    loop:
-      - mod: "filetransport"
-        url: "https://github.com/wabuehamm/elgg-plugin-filetransport/archive/master.zip"
-        rename_to: "filetransport"
+    - name: "Install file transport module"
+      include_tasks:
+        file: "tasks/install_module.yaml"
+      loop:
+        - mod: "filetransport"
+          url: "https://github.com/wabuehamm/elgg-plugin-filetransport/archive/master.zip"
+          rename_to: "filetransport"
 
 - name: "Run updates"
   tags:
