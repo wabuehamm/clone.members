@@ -7,6 +7,8 @@ services:
         MYSQL_DATABASE: "mitglieder"
         MYSQL_USER: "mitglieder"
         MYSQL_PASSWORD: "mitglieder"
+      volumes:
+        - "./db:/var/lib/mysql"
     web:
       image: "wabuehamm/web.members:latest"
       volumes:
