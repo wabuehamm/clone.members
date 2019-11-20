@@ -146,7 +146,7 @@
         src: "{{ hostvars['ansible_master']['local_tempdir'].path }}/application.tar.bz2"
         dest: "{{ remote_tempdir.path }}"
     - name: "Empty application folder"
-      command: "rm -rf * .htaccess chdir={{ application_folder_destination }}"
+      shell: "rm -rf * .htaccess chdir={{ application_folder_destination }}"
     - name: "Unarchive application archive"
       tags:
         - "uncheckable"
@@ -245,7 +245,7 @@
         src: "{{ hostvars['ansible_master']['local_tempdir'].path }}/data.tar.bz2"
         dest: "{{ remote_tempdir.path }}"
     - name: "Empty data folder"
-      command: "rm -rf * chdir={{ data_folder_destination }}"
+      shell: "rm -rf * chdir={{ data_folder_destination }}"
     - name: "Unarchive data archive"
       tags:
         - "uncheckable"
