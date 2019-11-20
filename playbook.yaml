@@ -25,10 +25,10 @@
         login_user: "{{ database_source_username }}"
         login_password: "{{ database_source_password }}"
         state: "dump"
-        target: "{{ tempfile.path }}.sql"
+        target: "{{ tempfile.path }}"
     - name: "Download dump"
       fetch:
-        src: "{{ tempfile.path }}.sql"
+        src: "{{ tempfile.path }}"
         dest: "{{ hostvars['ansible_master']['local_tempdir'].path }}/database.sql"
         flat: "yes"
     - name: "Cleanup"
@@ -118,16 +118,16 @@
         path: 
           - "{{ application_folder_source }}/*"
           - "{{ application_folder_source }}/.htaccess"
-        dest: "{{ application_archive.path }}.tar.bz2"
+        dest: "{{ application_archive.path }}"
         format: "bz2"
     - name: "Download application folder"
       fetch:
-        src: "{{ application_archive.path }}.tar.bz2"
+        src: "{{ application_archive.path }}"
         dest: "{{ hostvars['ansible_master']['local_tempdir'].path }}/application.tar.bz2"
         flat: "yes"
     - name: "Cleanup"
       file:
-        path: "{{ application_archive.path }}.tar.bz2"
+        path: "{{ application_archive.path }}"
         state: "absent"
 
 - name: "Transfer application to destination"
@@ -210,7 +210,7 @@
     - name: "Archive data folder"
       archive:
         path: "{{ data_folder_source }}/*"
-        dest: "{{ data_archive.path }}.tar.bz2"
+        dest: "{{ data_archive.path }}"
         format: "bz2"
         exclude_path:
           - "system_cache"
@@ -219,14 +219,14 @@
       tags:
         - "uncheckable"
       fetch:
-        src: "{{ data_archive.path }}.tar.bz2"
+        src: "{{ data_archive.path }}"
         dest: "{{ hostvars['ansible_master']['local_tempdir'].path }}/data.tar.bz2"
         flat: "yes"
     - name: "Cleanup"
       tags:
         - "uncheckable"
       file:
-        path: "{{ data_archive.path }}.tar.bz2"
+        path: "{{ data_archive.path }}"
         state: "absent"
 
 - name: "Transfer data folder to destination"
