@@ -145,18 +145,8 @@
       copy:
         src: "{{ hostvars['ansible_master']['local_tempdir'].path }}/application.tar.bz2"
         dest: "{{ remote_tempdir.path }}"
-    - name: "Find items in application folder"
-      find:
-        paths: "{{ application_folder_destination }}"
-        file_type: "any" 
-        hidden: "yes"
-        recurse: "yes"
-      register: "application_items"
     - name: "Empty application folder"
-      file:
-        path: "{{ item.path }}"
-        state: "absent"
-      with_items: "application_items"
+      command: "rm -rf * .htaccess chdir={{ application_folder_destination }}"
     - name: "Unarchive application archive"
       tags:
         - "uncheckable"
@@ -254,18 +244,8 @@
       copy:
         src: "{{ hostvars['ansible_master']['local_tempdir'].path }}/data.tar.bz2"
         dest: "{{ remote_tempdir.path }}"
-    - name: "Find items in data folder"
-      find:
-        paths: "{{ data_folder_destination }}"
-        file_type: "any" 
-        hidden: "yes"
-        recurse: "yes"
-      register: "data_items"
     - name: "Empty data folder"
-      file:
-        path: "{{ item.path }}"
-        state: "absent"
-      with_items: "data_items"
+      command: "rm -rf * chdir={{ data_folder_destination }}"
     - name: "Unarchive data archive"
       tags:
         - "uncheckable"
