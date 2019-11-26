@@ -291,6 +291,7 @@
       loop:
         - mod: "filetransport"
           url: "https://github.com/wabuehamm/elgg-plugin-filetransport/archive/master.zip"
+          rename_from: "elgg-plugin-filetransport-master"
           rename_to: "filetransport"
       loop_control:
         loop_var: "module"
