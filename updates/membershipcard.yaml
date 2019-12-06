@@ -1,0 +1,20 @@
+- name: "Remove wabue mod"
+  file:
+    path: "{{ application_folder_destination }}/mod/{{ superfluous_mod }}"
+    state: "absent"
+  loop: 
+    - "wabue"
+  loop_control:
+    loop_var: "superfluous_mod"
+- name: "Install wabue mod"
+  git:
+    repo: "https://github.com/wabuehamm/elgg-plugin-wabue.git"
+    dest: "{{ application_folder_destination }}/mod/wabue"
+    version: "membershipcard"
+- name: "Set owner of wabue fork"
+  file:
+    path: "{{ application_folder_destination }}/mod/wabue"
+    owner: "{{ owner_destination }}"
+    group: "{{ group_destination }}"
+    state: "directory"
+    recurse: "yes"
