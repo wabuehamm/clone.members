@@ -1,8 +1,2 @@
-- name: "Enable test mode"
-  hosts: application_destination
-  tags:
-    - "uncheckable"
-    - "integration"
-  tasks:
-    - name: "Activate filetransport plugin"
-      command: "php vendor/bin/elgg-cli wabue:testmode -t on"
+- name: "Activate testmode"
+  command: "php vendor/bin/elgg-cli wabue:testmode -t on"
