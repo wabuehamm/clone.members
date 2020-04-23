@@ -1,2 +1,2 @@
 - name: "Activate testmode"
-  command: "php vendor/bin/elgg-cli wabue:testmode -t on"
+  command: "php vendor/bin/elgg-cli wabue:testmode -t on chdir={{ application_folder_destination }}"
