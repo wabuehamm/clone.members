@@ -1,7 +1,9 @@
 - name: "Install filetransport denpendencies"
   command: "composer install chdir={{ application_folder_destination }}/mod/filetransport"
 - name: "Activate filetransport plugin"
-  command: "php vendor/bin/elgg-cli plugins:activate -- filetransport chdir={{ application_folder_destination }}"
+  command:
+    cmd: "php vendor/bin/elgg-cli plugins:activate -- filetransport"
+    chdir: "{{ application_folder_destination }}"
 - name: "Put wabue plugin at the end of the plugin ist"
   tags:
     - "uncheckable"
