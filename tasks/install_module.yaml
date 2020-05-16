@@ -25,3 +25,7 @@
     - "uncheckable"
   command: "mv {{ module['rename_from'] }} {{ module['rename_to'] }} chdir={{ application_folder_destination }}/mod"
   when: "module['rename_from'] is defined and module['rename_to'] is defined"
+- name "{{ module['mod'] }} - Refresh plugins"
+  tags:
+    - "uncheckable"
+  command: "php vendor/bin/elgg-cli plugin:list -r chdir={{ application_folder_destination }}"
