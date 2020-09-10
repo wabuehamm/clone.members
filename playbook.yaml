@@ -43,6 +43,8 @@
   hosts: ansible_master
   tasks:
     # Uses sed command instead of replace because auf https://github.com/ansible/ansible/issues/64353
+    - name: "Fix URL in php serialization"
+      command: "sed -i -re 's#s:{{ url_source|length }}:{{ url_source }}#s:{{ url_destination|length }}:{{ url_destination }}#gi' {{ local_tempdir.path }}/database.sql warn=no"
     - name: "Fix URL"
       command: "sed -i -re 's#{{ url_source }}#{{ url_destination }}#gi' {{ local_tempdir.path }}/database.sql warn=no"
     - name: "Fix data path"
