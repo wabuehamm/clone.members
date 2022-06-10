@@ -1,3 +1,0 @@
-[submodule "localdev"]
-	path = localdev
-	url = https://github.com/wabuehamm/elgg-localdev.git
