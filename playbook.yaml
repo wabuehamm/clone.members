@@ -78,11 +78,7 @@
         - "uncheckable"
       copy:
         src: "{{ hostvars['ansible_master']['local_tempdir'].path }}/database.sql"
-        dest: "{{ remote_tempdir.path }}"
-    - name: "Remove sandbox command"
-      replace:
-        path: "{{ remote_tempdir.path }}/database.sql"
-        regexp: "^.*enable the sandbox mode.*$"    
+        dest: "{{ remote_tempdir.path }}" 
     - name: "Clean database"
       mysql_db:
         name: "{{ database_destination_name }}"
