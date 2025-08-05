@@ -81,7 +81,7 @@
         dest: "{{ remote_tempdir.path }}"
     - name: "Remove sandbox command"
       replace:
-        path: "{{ hostvars['ansible_master']['local_tempdir'].path }}/database.sql"
+        path: "{{ remote_tempdir.path }}/database.sql"
         regexp: "^.*enable the sandbox mode.*$"    
     - name: "Clean database"
       mysql_db:
