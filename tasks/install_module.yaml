@@ -28,4 +28,4 @@
 - name: "{{ module['mod'] }} - Refresh plugins"
   tags:
     - "uncheckable"
-  command: "php vendor/bin/elgg-cli plugin:list -r chdir={{ application_folder_destination }}"
+  command: "{{ php_command }} vendor/bin/elgg-cli plugin:list -r chdir={{ application_folder_destination }}"
