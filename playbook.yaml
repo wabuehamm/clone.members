@@ -73,6 +73,10 @@
       template:
         dest: "{{ remote_tempdir.path }}/dropAllTables.sql"
         src: "templates/dropAllTables.sql.jinja"
+    - name: "Remove sandbox command"
+      replace:
+        path: "{{ hostvars['ansible_master']['local_tempdir'].path }}/database.sql"
+        regexp: "^.*enable the sandbox mode.*$"
     - name: "Upload dump"
       tags:
         - "uncheckable"
