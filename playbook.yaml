@@ -95,6 +95,8 @@
         login_password: "{{ database_destination_password }}"
         state: "import"
         target: "{{ remote_tempdir.path }}/database.sql"
+      vars:
+        ansible_command_timeout: 3600
     - name: "Cleanup"
       file:
         path: "{{ remote_tempdir.path }}"
