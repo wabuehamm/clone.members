@@ -1,5 +1,5 @@
 - name: "Install filetransport denpendencies"
-  command: "composer install chdir={{ application_folder_destination }}/mod/filetransport"
+  command: "{{ composer_command }} install chdir={{ application_folder_destination }}/mod/filetransport"
 - name: "Activate filetransport plugin"
   shell:
     cmd: "{{ php_command }} vendor/bin/elgg-cli plugins:activate filetransport"
