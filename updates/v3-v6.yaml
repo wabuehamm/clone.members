@@ -2,7 +2,7 @@
   pip:
     virtualenv: ".venv"
     name: "mechanize"
-    virtualenv_python: "python3"
+    virtualenv_command: "python3 -m venv"
 - name: "Export iCal"
   script: ".venv/bin/python exportics.py"
   environment:
