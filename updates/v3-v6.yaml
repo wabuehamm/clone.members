@@ -14,8 +14,9 @@
     dest: "{{ exporticstemp.path }}"
 - name: "Export ICS: Export iCal"
   script:
-    cmd: "source {{ exporticstemp.path }}/.venv/bin/activate && python exportics.py"
+    cmd: "python exportics.py"
     chdir: "{{ exporticstemp.path }}"
+    executable: "{{ exporticstemp.path }}/.venv/bin/python"
   environment:
     ELGG_URL: "{{url_destination}}"
     ELGG_USER: "{{application_admin_username}}"
