@@ -4,7 +4,7 @@
     name: "mechanize"
     virtualenv_command: "python -m venv"
 - name: "Export iCal"
-  script: "exportics.py"
+  script: ".venv/bin/python exportics.py"
   environment:
     ELGG_URL: "{{url_destination}}"
     ELGG_USER: "{{application_admin_username}}"
