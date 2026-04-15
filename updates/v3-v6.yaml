@@ -1,10 +1,17 @@
+- name: "Export ICS: Generate tempdir"
+  tempfile:
+    state: "directory"
+  register: "exporticstemp"
 - name: "Install mechanize dependency"
   pip:
     virtualenv: ".venv"
     name: "mechanize"
     virtualenv_command: "python3 -m venv"
-- name: "Export iCal"
-  script: ".venv/bin/python exportics.py"
+    chdir: "{{ exporticstemp.path }}"
+- name: "Export ICS: Export iCal"
+  script:
+    cmd: ".venv/bin/python exportics.py"
+    chdir: "{{ exporticstemp.path }}"
   environment:
     ELGG_URL: "{{url_destination}}"
     ELGG_USER: "{{application_admin_username}}"
@@ -72,4 +79,8 @@
         setting: "add_event_to_calendar"
         value: "no"
 - name: "Import iCal"
-  command: "{{ php_command }} vendor/bin/elgg-cli wabue:importics Calendar.ics chdir={{ application_folder_destination }}"
+  command: "{{ php_command }} vendor/bin/elgg-cli wabue:importics {{ exporticstemp.path }}/Calendar.ics chdir={{ application_folder_destination }}"
+- name: "Export ICS: Delete temporary directory"
+  file:
+    path: "{{ exporticstemp.path }}"
+    state: "absent"
