@@ -2,12 +2,16 @@
   tempfile:
     state: "directory"
   register: "exporticstemp"
-- name: "Install mechanize dependency"
+- name: "Export ICS: Install mechanize dependency"
   pip:
     virtualenv: ".venv"
     name: "mechanize"
     virtualenv_command: "python3 -m venv"
     chdir: "{{ exporticstemp.path }}"
+- name: "Export ICS: Copy script"
+  copy:
+    src: "exportics.py"
+    dest: "{{ exporticstemp.path }}"
 - name: "Export ICS: Export iCal"
   script:
     cmd: "{{ exporticstemp.path }}/.venv/bin/python exportics.py"
