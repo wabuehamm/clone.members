@@ -14,7 +14,7 @@
     dest: "{{ exporticstemp.path }}"
 - name: "Export ICS: Export iCal"
   script:
-    cmd: "python exportics.py"
+    cmd: "exportics.py"
     chdir: "{{ exporticstemp.path }}"
   args:
     executable: "{{ exporticstemp.path }}/.venv/bin/python"
