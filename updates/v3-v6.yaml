@@ -27,6 +27,7 @@
     command: "remove"
     arguments: "coldtrick/content_subscriptions juho-jaakkola/elgg-notification_tools iionly/autosubscribegroup iionly/elgg_update_services coldtrick/analytics"
     working_dir: "{{ application_folder_destination }}"
+    executable: "{{ php_command }}"
 - name: "Remove event_calendar"
   file:
     path: "{{ application_folder_destination }}/mod/event_calendar"
