@@ -39,6 +39,7 @@
   composer:
     command: "require"
     arguments: "{{ packages | join(' ') }}"
+    working_dir: "{{ application_folder_destination }}"
   vars:
     packages:
       - "coldtrick/csv_exporter^14.0"
