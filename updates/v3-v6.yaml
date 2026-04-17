@@ -69,19 +69,19 @@
       - "wabuehamm/auto_unsubscribe:dev-elgg6"
 - name: "Run system upgrade"
   command:
-    cmd: "{{ php_command }} vendor/elgg/elgg/elgg-cli upgrade"
+    cmd: "php vendor/elgg/elgg/elgg-cli upgrade"
     chdir: "{{ application_folder_destination }}"
 - name: "Run database:optimize"
   command:
-    cmd: "{{ php_command }} vendor/elgg/elgg/elgg-cli database:optimize"
+    cmd: "php vendor/elgg/elgg/elgg-cli database:optimize"
     chdir: "{{ application_folder_destination }}"
 - name: "Run cache:invalidate"
   command:
-    cmd: "{{ php_command }} vendor/elgg/elgg/elgg-cli cache:invalidate"
+    cmd: "php vendor/elgg/elgg/elgg-cli cache:invalidate"
     chdir: "{{ application_folder_destination }}"
 - name: "Configure plugins"
   command:
-    cmd: "{{ php_command }} vendor/elgg/elgg/elgg-cli wabue:pluginsettings {{ setting.plugin }} {{ setting.setting }} {{ setting.value }} chdir={{ application_folder_destination }}"
+    cmd: "php vendor/elgg/elgg/elgg-cli wabue:pluginsettings {{ setting.plugin }} {{ setting.setting }} {{ setting.value }} chdir={{ application_folder_destination }}"
     chdir: "{{ application_folder_destination }}"
   loop: "{{ settings }}"
   loop_control:
@@ -102,7 +102,7 @@
         value: "no"
 - name: "Import iCal"
   command:
-    cmd: "{{ php_command }} vendor/elgg/elgg/elgg-cli wabue:importics {{ exporticstemp.path }}/Calendar.ics chdir={{ application_folder_destination }}"
+    cmd: "php vendor/elgg/elgg/elgg-cli wabue:importics {{ exporticstemp.path }}/Calendar.ics chdir={{ application_folder_destination }}"
     chdir: "{{ application_folder_destination }}"
 - name: "Export ICS: Delete temporary directory"
   file:
