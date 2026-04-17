@@ -37,10 +37,15 @@
   file:
     path: "{{ application_folder_destination }}/mod/advanced_comments"
     state: "absent"
+- name: "Remove login_redirector repository"
+  composer:
+    command: "config"
+    arguments: "--unset repositories.1"
+    working_dir: "{{ application_folder_destination }}"
 - name: "Require updates"
   composer:
     command: "require"
-    arguments: "{{ packages | join(' ') }}"
+    arguments: "--with-all-dependencies {{ packages | join(' ') }}"
     working_dir: "{{ application_folder_destination }}"
   vars:
     packages:
