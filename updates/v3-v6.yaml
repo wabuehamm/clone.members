@@ -22,6 +22,10 @@
     ELGG_URL: "{{url_destination}}"
     ELGG_USER: "{{application_admin_username}}"
     ELGG_PASSWORD: "{{application_admin_password}}"
+- name: "Deactivate old modules via elgg-cli"
+  command:
+    cmd: "{{ php_command }} vendor/elgg/elgg/elgg-cli plugins:deactivate content_subscriptions notification_tools autosubscribegroup elgg_update_services analytics event_calendar advanced_comments"
+    chdir: "{{ application_folder_destination }}"
 - name: "Remove old modules via composer"
   composer:
     command: "remove"
