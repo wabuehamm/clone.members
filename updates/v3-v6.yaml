@@ -33,15 +33,19 @@
     working_dir: "{{ application_folder_destination }}"
     composer_executable: "/home/waldbuehne/composer.phar"
     executable: "{{ php_command }}"
-- name: "Remove mod folder for final cleanup"
-  file:
-    path: "{{ application_folder_destination }}/mod"
-    state: "absent"
 - name: "Remove login_redirector repository"
   composer:
     command: "config"
     arguments: "--unset repositories.1"
     working_dir: "{{ application_folder_destination }}"
+- name: "Remove mod folder for final cleanup"
+  file:
+    path: "{{ application_folder_destination }}/mod"
+    state: "absent"
+- name: "Recreate mod directory"
+  file:
+    path: "{{ application_folder_destination }}/mod"
+    state: "present"
 - name: "Reinitialize mod directory"
   composer:
     command: "run-script"
