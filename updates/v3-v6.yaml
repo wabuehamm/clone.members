@@ -42,6 +42,13 @@
     command: "config"
     arguments: "--unset repositories.1"
     working_dir: "{{ application_folder_destination }}"
+- name: "Reinitialize mod directory"
+  composer:
+    command: "run-script"
+    arguments: "post-install-cmd"
+    working_dir: "{{ application_folder_destination }}"
+    composer_executable: "/home/waldbuehne/composer.phar"
+    executable: "{{ php_command }}"
 - name: "Require updates"
   composer:
     command: "require"
