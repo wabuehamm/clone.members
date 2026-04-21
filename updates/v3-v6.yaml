@@ -24,7 +24,7 @@
     ELGG_PASSWORD: "{{application_admin_password}}"
 - name: "Deactivate old modules via elgg-cli"
   command:
-    cmd: "{{ php_command }} vendor/elgg/elgg/elgg-cli plugins:deactivate content_subscriptions notification_tools autosubscribegroup elgg_update_services analytics event_calendar advanced_comments"
+    cmd: "{{ php_command }} vendor/elgg/elgg/elgg-cli plugins:deactivate content_subscriptions notification_tools autosubscribegroup elgg_update_services analytics event_calendar advanced_comments content_subscriptions garbagecollector"
     chdir: "{{ application_folder_destination }}"
 - name: "Remove old modules via composer"
   composer:
@@ -33,13 +33,9 @@
     working_dir: "{{ application_folder_destination }}"
     composer_executable: "/home/waldbuehne/composer.phar"
     executable: "{{ php_command }}"
-- name: "Remove event_calendar"
+- name: "Remove mod folder for final cleanup"
   file:
-    path: "{{ application_folder_destination }}/mod/event_calendar"
-    state: "absent"
-- name: "Remove advanced_comments"
-  file:
-    path: "{{ application_folder_destination }}/mod/advanced_comments"
+    path: "{{ application_folder_destination }}/mod"
     state: "absent"
 - name: "Remove login_redirector repository"
   composer:
