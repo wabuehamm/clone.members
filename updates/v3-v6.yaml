@@ -24,12 +24,12 @@
     ELGG_PASSWORD: "{{application_admin_password}}"
 - name: "Deactivate old modules via elgg-cli"
   command:
-    cmd: "{{ php_command }} vendor/elgg/elgg/elgg-cli plugins:deactivate content_subscriptions notification_tools autosubscribegroup elgg_update_services analytics event_calendar advanced_comments content_subscriptions garbagecollector"
+    cmd: "{{ php_command }} vendor/elgg/elgg/elgg-cli plugins:deactivate roles content_subscriptions notification_tools autosubscribegroup elgg_update_services analytics event_calendar advanced_comments content_subscriptions garbagecollector"
     chdir: "{{ application_folder_destination }}"
 - name: "Remove old modules via composer"
   composer:
     command: "remove"
-    arguments: "coldtrick/content_subscriptions juho-jaakkola/elgg-notification_tools iionly/autosubscribegroup iionly/elgg_update_services coldtrick/analytics"
+    arguments: "coldtrick/content_subscriptions juho-jaakkola/elgg-notification_tools iionly/autosubscribegroup iionly/elgg_update_services coldtrick/analytics wabuehamm/roles"
     working_dir: "{{ application_folder_destination }}"
     composer_executable: "/home/waldbuehne/composer.phar"
     executable: "{{ php_command }}"
