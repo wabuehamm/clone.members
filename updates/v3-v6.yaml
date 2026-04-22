@@ -82,10 +82,6 @@
   command:
     cmd: "php vendor/elgg/elgg/elgg-cli upgrade"
     chdir: "{{ application_folder_destination }}"
-- name: "Run database:optimize"
-  command:
-    cmd: "php vendor/elgg/elgg/elgg-cli database:optimize"
-    chdir: "{{ application_folder_destination }}"
 - name: "Run cache:invalidate"
   command:
     cmd: "php vendor/elgg/elgg/elgg-cli cache:invalidate"
