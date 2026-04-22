@@ -18,6 +18,6 @@ br.select_form(
 br["start_date"] = "2026-01-01"
 br["end_date"] = "2026-12-31"
 response = br.submit()
-f = open("../.venv/Calendar.ics", "w")
+f = open("Calendar.ics", "w")
 f.write(response.read().decode("utf-8"))
 f.close()
