@@ -1,1 +1,1 @@
-delete from elgg_entites where subtype = 'event_calendar';
+delete from elgg_entities where subtype = 'event_calendar';
