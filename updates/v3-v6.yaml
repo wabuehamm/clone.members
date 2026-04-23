@@ -34,9 +34,9 @@
   shell:
     cmd: |
       CALENDAR=$(cat Calendar.ics)
-      echo "$CALENDAR" | icarus copyProperty -S X-PROP-REGION -T X-PROP-TYPE -O \
-      | icarus deleteProperty -P X-PROP-REGION \
-      | icarus copyProperty -S DTSTART -T DTEND -O -p DTEND -s 19700101T180000 \
+      echo "$CALENDAR" | ./icarus copyProperty -S X-PROP-REGION -T X-PROP-TYPE -O \
+      | ./icarus deleteProperty -P X-PROP-REGION \
+      | ./icarus copyProperty -S DTSTART -T DTEND -O -p DTEND -s 19700101T180000 \
       > Calendar.ics
     chdir: "{{ exporticstemp.path }}"
 - name: "Deactivate old modules via elgg-cli"
