@@ -209,7 +209,7 @@
     - name: "Add wwwroot"
       lineinfile:
         path: "{{ application_folder_destination }}/elgg-config/settings.php"
-        line: "$CONFIG->wwwroot = '{{ url_destination }}';"
+        line: "$CONFIG->wwwroot = '{{ url_destination }}/';"
 
 - name: "Transfer data folder from source"
   tags:
