@@ -1,10 +1,12 @@
-- name: "Activate filetransport plugin"
-  shell:
-    cmd: "php vendor/bin/elgg-cli plugins:activate filetransport"
-    chdir: "{{ application_folder_destination }}"
 - name: "Configure plugins"
   tags:
     - "uncheckable"
   command: "php vendor/bin/elgg-cli wabue:configure chdir={{ application_folder_destination }}"
+- name: "Activate filetransport plugin"
+  shell:
+    cmd: "php vendor/bin/elgg-cli plugins:activate filetransport"
+    chdir: "{{ application_folder_destination }}"
+- name: "Correct priorization"
+  command: "php vendor/bin/elgg-cli wabue:prioritize chdir={{ application_folder_destination }}"
 - name: "Activate testmode"
   command: "php vendor/bin/elgg-cli wabue:testmode -t on chdir={{ application_folder_destination }}"
