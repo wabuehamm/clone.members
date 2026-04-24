@@ -19,7 +19,7 @@
   args:
     executable: "{{ exporticstemp.path }}/.venv/bin/python"
   environment:
-    ELGG_URL: "{{url_destination}}"
+    ELGG_URL: "{{url_source}}"
     ELGG_USER: "{{application_admin_username}}"
     ELGG_PASSWORD: "{{application_admin_password}}"
 - name: "Install icarus"
