@@ -46,7 +46,7 @@
 - name: "Remove old modules via composer"
   composer:
     command: "remove"
-    arguments: "coldtrick/content_subscriptions juho-jaakkola/elgg-notification_tools iionly/autosubscribegroup iionly/elgg_update_services coldtrick/analytics wabuehamm/roles"
+    arguments: "coldtrick/content_subscriptions juho-jaakkola/elgg-notification_tools iionly/autosubscribegroup iionly/elgg_update_services coldtrick/analytics wabuehamm/roles coldtrick/ckeditor_extended"
     working_dir: "{{ application_folder_destination }}"
     composer_executable: "/home/waldbuehne/composer.phar"
     executable: "{{ php_command }}"
@@ -78,7 +78,6 @@
   vars:
     packages:
       - "coldtrick/csv_exporter:^14.0"
-      - "coldtrick/entity_attachments:^7.0"
       - "coldtrick/event_manager:=dev-master"
       - "coldtrick/group_tools:^22.1"
       - "coldtrick/login_redirector:=dev-master"
@@ -98,6 +97,10 @@
 - name: "Run system upgrade"
   command:
     cmd: "php vendor/elgg/elgg/elgg-cli upgrade"
+    chdir: "{{ application_folder_destination }}"
+- name: "Activate event_manager"
+  command:
+    cmd: "php vendor/elgg/elgg/elgg-cli plugins:activate event_manager"
     chdir: "{{ application_folder_destination }}"
 - name: "Run cache:invalidate"
   command:
