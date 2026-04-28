@@ -40,6 +40,7 @@
       CALENDAR=$(echo "$CALENDAR" | ./icarus copyProperty -S DTSTART -T DTEND -O -p DTEND -s 19700101T180000)
       echo "$CALENDAR" > Calendar.ics
     chdir: "{{ exporticstemp.path }}"
+    executable: "/usr/bin/bash"
 - name: "Deactivate old modules via elgg-cli"
   command:
     cmd: "{{ php_command }} vendor/elgg/elgg/elgg-cli plugins:deactivate ckeditor_extended roles content_subscriptions notification_tools autosubscribegroup elgg_update_services analytics event_calendar advanced_comments content_subscriptions garbagecollector"
