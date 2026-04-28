@@ -33,6 +33,7 @@
 - name: "Fix calendar"
   shell:
     cmd: |
+      set -euo pipefail
       CALENDAR=$(cat Calendar.ics)
       CALENDAR=$(echo "$CALENDAR" | ./icarus copyProperty -S X-PROP-REGION -T X-PROP-TYPE -O)
       CALENDAR=$(echo "$CALENDAR" | ./icarus deleteProperty -P X-PROP-REGION)
