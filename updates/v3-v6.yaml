@@ -34,6 +34,7 @@
   shell:
     cmd: |
       set -euo pipefail
+      cp Calendar.ics Calendar.ics.orig
       CALENDAR=$(cat Calendar.ics)
       CALENDAR=$(echo "$CALENDAR" | ./icarus copyProperty -S X-PROP-REGION -T X-PROP-TYPE -O)
       CALENDAR=$(echo "$CALENDAR" | ./icarus deleteProperty -P X-PROP-REGION)
