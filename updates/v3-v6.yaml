@@ -101,6 +101,15 @@
   command:
     cmd: "php vendor/elgg/elgg/elgg-cli upgrade"
     chdir: "{{ application_folder_destination }}"
+- name: "Run upgrades"
+  shell:
+    cmd: |
+      set -euo pipefail
+      PACKAGES=$(vendor/elgg/elgg/elgg-cli upgrade:list --language en | awk '/Pending upgrades/ { m=1 } m' | grep Elgg | cut -d "|" -f 2 | tr -d " " | paste -s -d " ")
+      echo "Updating packages $PACKAGES"
+      vendor/elgg/elgg/elgg-cli upgrade:batch $PACKAGES
+    chdir: "{{ application_folder_destination }}"
+    executable: "/usr/bin/bash"
 - name: "Activate event_manager"
   command:
     cmd: "php vendor/elgg/elgg/elgg-cli plugins:activate event_manager"
