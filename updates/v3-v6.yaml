@@ -141,7 +141,7 @@
         value: "no"
 - name: "Import iCal"
   command:
-    cmd: "php vendor/elgg/elgg/elgg-cli wabue:importics {{ exporticstemp.path }}/Calendar.ics"
+    cmd: "php vendor/elgg/elgg/elgg-cli wabue:importics -u root {{ exporticstemp.path }}/Calendar.ics"
     chdir: "{{ application_folder_destination }}"
 - name: "Export ICS: Delete temporary directory"
   file:
