@@ -81,7 +81,7 @@
   vars:
     packages:
       - "coldtrick/csv_exporter:^14.0"
-      - "coldtrick/event_manager:=dev-master"
+      - "coldtrick/event_manager:=v20.2"
       - "coldtrick/group_tools:^22.1"
       - "coldtrick/login_redirector:=dev-master"
       - "coldtrick/menu_builder:^11.0"
