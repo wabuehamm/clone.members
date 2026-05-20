@@ -145,7 +145,7 @@
         value: "no"
 - name: "Restore favicons"
   copy:
-    src: "{{ exporticstemp.path }}/graphics"
+    src: "{{ exporticstemp.path }}/graphics/"
     dest: "{{ application_folder_destination }}/mod/favicon_override/graphics"
 - name: "Import iCal"
   command:
