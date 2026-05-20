@@ -42,6 +42,10 @@
       echo "$CALENDAR" > Calendar.ics
     chdir: "{{ exporticstemp.path }}"
     executable: "/usr/bin/bash"
+- name: "Backup favicons"
+  copy:
+    src: "{{ application_folder_destination }}/mod/favicon_override/graphics"
+    dst: "{{ exporticstemp.path }}/graphics"
 - name: "Deactivate old modules via elgg-cli"
   command:
     cmd: "{{ php_command }} vendor/elgg/elgg/elgg-cli plugins:deactivate ckeditor_extended roles content_subscriptions notification_tools autosubscribegroup elgg_update_services analytics event_calendar advanced_comments content_subscriptions garbagecollector"
@@ -139,6 +143,10 @@
       - plugin: "event_manager"
         setting: "add_event_to_calendar"
         value: "no"
+- name: "Restore favicons"
+  copy:
+    src: "{{ exporticstemp.path }}/graphics"
+    dst: "{{ application_folder_destination }}/mod/favicon_override/graphics"
 - name: "Import iCal"
   command:
     cmd: "php vendor/elgg/elgg/elgg-cli wabue:importics -u root {{ exporticstemp.path }}/Calendar.ics"
