@@ -146,7 +146,7 @@
 - name: "Restore favicons"
   copy:
     src: "{{ exporticstemp.path }}/graphics"
-    dst: "{{ application_folder_destination }}/mod/favicon_override/graphics"
+    dest: "{{ application_folder_destination }}/mod/favicon_override/graphics"
 - name: "Import iCal"
   command:
     cmd: "php vendor/elgg/elgg/elgg-cli wabue:importics -u root {{ exporticstemp.path }}/Calendar.ics"
