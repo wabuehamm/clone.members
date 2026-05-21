@@ -143,6 +143,10 @@
       - plugin: "event_manager"
         setting: "add_event_to_calendar"
         value: "no"
+- name: "Remove stock favicons"
+  file:
+    path: "{{ application_folder_destination }}/mod/favicon_override/graphics"
+    state: "absent"
 - name: "Restore favicons"
   copy:
     src: "{{ exporticstemp.path }}/graphics"
