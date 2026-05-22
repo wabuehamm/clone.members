@@ -94,7 +94,7 @@
       - "coldtrick/redirector:^6.0"
       - "coldtrick/site_announcements:^12.0"
       - "elgg/elgg:~6.3"
-      - "iionly/favicon_override:^4.0"
+      - "wabuehamm/favicon_override:dev-elgg-6"
       - "wabuehamm/filetransport:dev-elgg6"
       - "wabuehamm/membership:dev-elgg6"
       - "wabuehamm/wabue:dev-elgg6"
