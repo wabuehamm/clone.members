@@ -65,7 +65,7 @@
 - name: "Add favicon_override fork repository"
   composer:
     command: "config"
-    arguments: "--set repositories.favicon_override vcs https://github.com/iionly/favicon_override"
+    arguments: "repositories.favicon_override vcs https://github.com/iionly/favicon_override"
     working_dir: "{{ application_folder_destination }}"
 - name: "Remove mod folder for final cleanup"
   file:
