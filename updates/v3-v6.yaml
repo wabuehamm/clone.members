@@ -65,7 +65,7 @@
 - name: "Add favicon_override fork repository"
   composer:
     command: "config"
-    arguments: "repositories.favicon_override vcs https://github.com/iionly/favicon_override"
+    arguments: "repositories.favicon_override vcs https://github.com/wabuehamm/favicon_override"
     working_dir: "{{ application_folder_destination }}"
 - name: "Remove mod folder for final cleanup"
   file:
@@ -99,7 +99,7 @@
       - "coldtrick/redirector:^6.0"
       - "coldtrick/site_announcements:^12.0"
       - "elgg/elgg:~6.3"
-      - "wabuehamm/favicon_override:dev-elgg-6"
+      - "iionly/favicon_override:dev-feture/elgg-5"
       - "wabuehamm/filetransport:dev-elgg6"
       - "wabuehamm/membership:dev-elgg6"
       - "wabuehamm/wabue:dev-elgg6"
