@@ -290,20 +290,6 @@
         path: "{{ local_tempdir.path }}/data.tar.bz2"
         state: "absent"
 
-- name: "Add file transport module"
-  hosts: application_destination
-  tasks:
-    - name: "Install file transport module"
-      include_tasks:
-        file: "tasks/install_module.yaml"
-      loop:
-        - mod: "filetransport"
-          url: "https://github.com/wabuehamm/elgg-plugin-filetransport/archive/master.zip"
-          rename_from: "elgg-plugin-filetransport-master"
-          rename_to: "filetransport"
-      loop_control:
-        loop_var: "module"
-
 - name: "Run updates"
   tags:
     - "updates"
