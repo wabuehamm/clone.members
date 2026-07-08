@@ -1,0 +1,15 @@
+- name: "Remove mod folder for final cleanup"
+  file:
+    path: "{{ application_folder_destination }}/mod"
+    state: "absent"
+- name: "Recreate mod directory"
+  file:
+    path: "{{ application_folder_destination }}/mod"
+    state: "directory"
+- name: "Reinitialize mod directory"
+  composer:
+    command: "run-script"
+    arguments: "post-install-cmd"
+    working_dir: "{{ application_folder_destination }}"
+    composer_executable: "/home/waldbuehne/composer.phar"
+    executable: "{{ php_command }}"
