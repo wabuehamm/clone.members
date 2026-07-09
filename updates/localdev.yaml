@@ -11,5 +11,5 @@
     command: "run-script"
     arguments: "post-install-cmd"
     working_dir: "{{ application_folder_destination }}"
-    composer_executable: "/home/waldbuehne/composer.phar"
+    composer_executable: "/usr/bin/composer.phar"
     executable: "{{ php_command }}"
