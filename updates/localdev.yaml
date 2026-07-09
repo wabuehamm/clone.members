@@ -1,11 +1,3 @@
-- name: "Remove mod folder for final cleanup"
-  file:
-    path: "{{ application_folder_destination }}/mod"
-    state: "absent"
-- name: "Recreate mod directory"
-  file:
-    path: "{{ application_folder_destination }}/mod"
-    state: "directory"
 - name: "Reinitialize mod directory"
   composer:
     command: "run-script"
