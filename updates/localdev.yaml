@@ -7,7 +7,7 @@
   file:
     path: "{{ modlink.path }}"
     state: "absent"
-  loop: "{{ modlinks }}"
+  loop: "{{ modlinks.files }}"
   loop_control:
     loop_var: "modlink"
 - name: "Reinitialize mod directory"
