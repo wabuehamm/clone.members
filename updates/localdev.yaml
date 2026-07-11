@@ -5,7 +5,7 @@
   register: "modlinks"
 - name: "Delete symlinked mods"
   file:
-    path: "{{ modlink }}"
+    path: "{{ modlink.path }}"
     state: "absent"
   loop: "{{ modlinks }}"
   loop_control:
