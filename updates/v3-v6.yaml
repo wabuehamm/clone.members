@@ -150,10 +150,10 @@
         value: "no"
       - plugin: "ckeditor"
         setting: "toolbar_default"
-        value: "Bold,Italic,Underline,Strikethrough,|,NumberedList,BulletedList,outdent,indent,alignment,|,tableOfContents,Link,imageUpload,blockQuote,insertTable,undo,redo,|,RemoveFormat,sourceEditing"
+        value: "undo,redo,|,heading,|,fontSize,fontFamily,fontColor,fontBackgroundColor,|,bold,italic,underline,strikethrough,code,|,NumberedList,BulletedList,outdent,indent,alignment,|,horizontalLine,link,insertTable,highlight,blockQuote,|,sourceEditing"
       - plugin: "ckeditor"
         setting: "toolbar_simple"
-        value: "Bold,Italic,Underline,Strikethrough,|,NumberedList,BulletedList,outdent,indent,alignment,|,tableOfContents,Link,imageUpload,blockQuote,insertTable,undo,redo,|,RemoveFormat,sourceEditing"
+        value: "undo,redo,|,heading,|,fontSize,fontFamily,fontColor,fontBackgroundColor,|,bold,italic,underline,strikethrough,code,|,NumberedList,BulletedList,outdent,indent,alignment,|,horizontalLine,link,insertTable,highlight,blockQuote,|,sourceEditing"
 - name: "Remove stock favicons"
   file:
     path: "{{ application_folder_destination }}/mod/favicon_override/graphics"
