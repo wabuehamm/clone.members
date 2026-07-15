@@ -129,7 +129,7 @@
     chdir: "{{ application_folder_destination }}"
 - name: "Configure plugins"
   command:
-    cmd: "php vendor/elgg/elgg/elgg-cli wabue:pluginsettings set {{ setting.plugin }} {{ setting.setting }} '{{ setting.value }}'"
+    cmd: "php vendor/elgg/elgg/elgg-cli wabue:pluginsettings set {{ setting.plugin }} {{ setting.setting }} {{ setting.value }}"
     chdir: "{{ application_folder_destination }}"
   loop: "{{ settings }}"
   loop_control:
