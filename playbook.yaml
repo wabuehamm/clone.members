@@ -302,6 +302,8 @@
       loop: "{{ update_tasks }}"
       loop_control:
         loop_var: "update_task"
+      tags:
+        - "include_updates"
 
 - name: "Run database updates"
   tags:
