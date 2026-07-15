@@ -134,6 +134,7 @@
   loop: "{{ settings }}"
   loop_control:
     loop_var: "setting"
+  register: "configure_cmd"
   vars:
     settings:
       - plugin: "event_manager"
@@ -158,6 +159,8 @@
         setting: "menu_site_config"
         value: >
           {"menu_name_1519408917":{"access_id":1,"is_action":"0","lightbox":"0","priority":"0","name":"menu_name_1519408917","text":"Spielerliste","href":"members?sort_by[property]=name&amp;sort_by[property_type]=metadata&amp;sort_by[direction]=asc","icon":"","target":"0","parent_name":"0"},"menu_name_1519408937":{"access_id":1,"is_action":"0","lightbox":"0","priority":"2","name":"menu_name_1519408937","text":"Forum","href":"discussion\/group\/45105","icon":"","target":"0","parent_name":"0"},"menu_name_1519408954":{"access_id":1,"is_action":"0","lightbox":"0","priority":"1","name":"menu_name_1519408954","text":"Termine","href":"event\/upcoming","icon":"","target":"0","parent_name":"0"},"menu_name_1519413627":{"access_id":0,"is_action":"0","priority":3,"name":"menu_name_1519413627","text":"Gruppen","href":"groups","target":"0","parent_name":"0"},"menu_name_1519806361":{"access_id":0,"is_action":"0","priority":4,"name":"menu_name_1519806361","text":"Seiten","href":"pages","target":"0","parent_name":"0"},"menu_name_1520854143":{"access_id":1,"is_action":"0","lightbox":"0","priority":"6","name":"menu_name_1520854143","text":"Handbuch","href":"pages\/view\/53543\/handbuch-zum-mitgliederbereich","icon":"","target":"0","parent_name":"0"},"menu_name_1623129656":{"access_id":1,"is_action":"0","lightbox":"0","priority":"5","name":"menu_name_1623129656","text":"Vereinsinfo","href":"pages\/view\/59026\/vereinsinformation","icon":"","target":"0","parent_name":"0"},"menu_name_1636967106":{"access_id":1,"is_action":"0","lightbox":"0","priority":"1636967068","name":"menu_name_1636967106","text":"Verwaltung","href":"membership","icon":"","target":"0","parent_name":"0"},"menu_name_1784025334":{"access_id":1,"is_action":"0","lightbox":"0","priority":"1784025326","name":"menu_name_1784025334","text":"Dateien","href":"\/file","icon":"","target":"0","parent_name":"0"}}
+- debug:
+    var: "configure_cmd"
 - name: "Remove stock favicons"
   file:
     path: "{{ application_folder_destination }}/mod/favicon_override/graphics"
