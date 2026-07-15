@@ -1,4 +1,2 @@
 delete from elgg_metadata where entity_guid in (select guid from elgg_entities where subtype = 'event_calendar');
 delete from elgg_entities where subtype = 'event_calendar';
-update elgg_metadata set value = (select json_replace(value, '$.menu_name_1519408954.href', 'event/upcoming') from elgg_metadata where name = 'menu_site_config') where name = 'menu_site_config';
-update elgg_metadata set value = (select json_replace(value, '$.menu_name_1519408917.href', 'members?sort_by[property]=name&sort_by[property_type]=metadata&sort_by[direction]=asc') from elgg_metadata where name = 'menu_site_config') where name = 'menu_site_config';
