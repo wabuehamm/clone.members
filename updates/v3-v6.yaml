@@ -184,7 +184,3 @@
     cmd: "php vendor/elgg/elgg/elgg-cli wabue:pagecontent -u {{ application_admin_username }} import 53543"
     chdir: "{{ application_folder_destination }}"
     stdin: "{{ lookup('ansible.builtin.file', '/home/waldbuehne/handbuchexport.html') }}"
-- name: "Clear cache"
-  command:
-    cmd: "php vendor/elgg/elgg/elgg-cli cache:clear"
-    chdir: "{{ application_folder_destination }}"
