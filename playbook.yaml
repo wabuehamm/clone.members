@@ -341,7 +341,8 @@
         command: "run-script"
         arguments: "post-install-cmd"
         working_dir: "{{ application_folder_destination }}"
-
+        composer_executable: "{{ composer_path }}"
+        executable: "{{ php_command }}"
 - name: "Configure plugins"
   hosts: application_destination
   tags:
