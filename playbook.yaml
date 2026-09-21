@@ -318,6 +318,32 @@
       loop_control:
         loop_var: "update_task_sql"
 
+- name: "Recreate mod links"
+  hosts: application_destination
+  tags:
+    - "recreate_mod_links"
+  tasks:
+    - name: "Find mod links"
+      find:
+        file_type: "link"
+        paths:
+          - "{{ application_folder_destination }}/mod"
+      register: "mod_links"
+    - name: "Delete mod links"
+      file:
+        state: absent
+        path: "{{ mod_link.path }}"
+      loop: "{{ mod_links.files }}"
+      loop_control:
+        loop_var: "mod_link"
+    - name: "Recreate mod links"
+      composer:
+        command: "run-script"
+        arguments: "post-install-cmd"
+        working_dir: "{{ application_folder_destination }}"
+        composer_executable: "/home/waldbuehne/composer.phar"
+        executable: "{{ php_command }}"
+
 - name: "Configure plugins"
   hosts: application_destination
   tags:
