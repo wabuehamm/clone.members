@@ -1,0 +1,19 @@
+- name: "Require updates"
+  composer:
+    command: "require"
+    arguments: "--with-all-dependencies {{ packages | join(' ') }}"
+    working_dir: "{{ application_folder_destination }}"
+  vars:
+    packages:
+      - "coldtrick/csv_exporter:^15.0"
+      - "coldtrick/event_manager:^21.2"
+      - "coldtrick/group_tools:^23.2"
+      - "coldtrick/poll:^14.0"
+      - "coldtrick/profile_manager:^23.0"
+      - "coldtrick/redirector:^7.0"
+      - "coldtrick/site_announcements:^13.0"
+      - "elgg/elgg:^7.1"
+- name: "Run system upgrade"
+  command:
+    cmd: "php vendor/elgg/elgg/elgg-cli upgrade"
+    chdir: "{{ application_folder_destination }}"
