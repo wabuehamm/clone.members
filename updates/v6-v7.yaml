@@ -12,6 +12,8 @@
       - "coldtrick/profile_manager:^23.0"
       - "coldtrick/redirector:^7.0"
       - "coldtrick/site_announcements:^13.0"
+      - "wabuehamm/membership:=dev-elgg7"
+      - "wabuehamm/wabue:=dev-elgg7"
       - "elgg/elgg:^7.1"
 - name: "Run system upgrade"
   command:
