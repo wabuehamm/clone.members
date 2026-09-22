@@ -1,0 +1,186 @@
+- name: "Export ICS: Generate tempdir"
+  tempfile:
+    state: "directory"
+  register: "exporticstemp"
+- name: "Export ICS: Install mechanize dependency"
+  pip:
+    virtualenv: ".venv"
+    name: "mechanize"
+    virtualenv_command: "python3 -m venv"
+    chdir: "{{ exporticstemp.path }}"
+- name: "Export ICS: Copy script"
+  copy:
+    src: "exportics.py"
+    dest: "{{ exporticstemp.path }}"
+- name: "Export ICS: Export iCal"
+  script:
+    cmd: "exportics.py"
+    chdir: "{{ exporticstemp.path }}"
+  args:
+    executable: "{{ exporticstemp.path }}/.venv/bin/python"
+  environment:
+    ELGG_URL: "{{url_source}}"
+    ELGG_USER: "{{application_admin_username}}"
+    ELGG_PASSWORD: "{{application_admin_password}}"
+- name: "Install icarus"
+  get_url:
+    url: "https://github.com/dploeger/icarus/releases/download/v2.8.1/icarus-linux-amd64"
+    dest: "{{ exporticstemp.path }}/icarus"
+- name: "Make icarus executable"
+  file:
+    mode: "u+x"
+    path: "{{ exporticstemp.path }}/icarus"
+- name: "Fix calendar"
+  shell:
+    cmd: |
+      set -euo pipefail
+      cp Calendar.ics Calendar.ics.orig
+      CALENDAR=$(cat Calendar.ics)
+      CALENDAR=$(echo "$CALENDAR" | ./icarus copyProperty -S X-PROP-REGION -T X-PROP-TYPE -O)
+      CALENDAR=$(echo "$CALENDAR" | ./icarus deleteProperty -P X-PROP-REGION)
+      CALENDAR=$(echo "$CALENDAR" | ./icarus copyProperty -S DTSTART -T DTEND -O -p DTEND -s 19700101T180000)
+      echo "$CALENDAR" > Calendar.ics
+    chdir: "{{ exporticstemp.path }}"
+    executable: "/usr/bin/bash"
+- name: "Backup favicons"
+  copy:
+    src: "{{ application_folder_destination }}/mod/favicon_override/graphics"
+    dest: "{{ exporticstemp.path }}/graphics"
+- name: "Deactivate old modules via elgg-cli"
+  command:
+    cmd: "{{ php_command }} vendor/elgg/elgg/elgg-cli plugins:deactivate ckeditor_extended roles content_subscriptions notification_tools autosubscribegroup elgg_update_services analytics event_calendar advanced_comments content_subscriptions garbagecollector"
+    chdir: "{{ application_folder_destination }}"
+- name: "Remove old modules via composer"
+  composer:
+    command: "remove"
+    arguments: "coldtrick/content_subscriptions juho-jaakkola/elgg-notification_tools iionly/autosubscribegroup iionly/elgg_update_services coldtrick/analytics wabuehamm/roles wabuehamm/backtotop coldtrick/ckeditor_extended"
+    working_dir: "{{ application_folder_destination }}"
+    composer_executable: "/home/waldbuehne/composer.phar"
+    executable: "{{ php_command }}"
+- name: "Remove login_redirector repository"
+  composer:
+    command: "config"
+    arguments: "--unset repositories.1"
+    working_dir: "{{ application_folder_destination }}"
+- name: "Add favicon_override fork repository"
+  composer:
+    command: "config"
+    arguments: "repositories.favicon_override vcs https://github.com/wabuehamm/favicon_override"
+    working_dir: "{{ application_folder_destination }}"
+- name: "Remove mod folder for final cleanup"
+  file:
+    path: "{{ application_folder_destination }}/mod"
+    state: "absent"
+- name: "Recreate mod directory"
+  file:
+    path: "{{ application_folder_destination }}/mod"
+    state: "directory"
+- name: "Reinitialize mod directory"
+  composer:
+    command: "run-script"
+    arguments: "post-install-cmd"
+    working_dir: "{{ application_folder_destination }}"
+    composer_executable: "/home/waldbuehne/composer.phar"
+    executable: "{{ php_command }}"
+- name: "Require updates"
+  composer:
+    command: "require"
+    arguments: "--with-all-dependencies {{ packages | join(' ') }}"
+    working_dir: "{{ application_folder_destination }}"
+  vars:
+    packages:
+      - "coldtrick/csv_exporter:^14.0"
+      - "coldtrick/event_manager:=v20.2"
+      - "coldtrick/group_tools:^22.1"
+      - "coldtrick/login_redirector:=dev-master"
+      - "coldtrick/menu_builder:^11.0"
+      - "coldtrick/poll:^12.1"
+      - "coldtrick/profile_manager:^22.0"
+      - "coldtrick/redirector:^6.0"
+      - "coldtrick/site_announcements:^12.0"
+      - "elgg/elgg:~6.3"
+      - "iionly/favicon_override:dev-feture/elgg-5"
+      - "wabuehamm/filetransport:0.2.0"
+      - "wabuehamm/membership:0.17.0"
+      - "wabuehamm/wabue:0.7.0"
+      - "wabuehamm/big_avatar:3.0.0"
+      - "wabuehamm/auto_unsubscribe:3.0.0"
+- name: "Run system upgrade"
+  command:
+    cmd: "php vendor/elgg/elgg/elgg-cli upgrade"
+    chdir: "{{ application_folder_destination }}"
+- name: "Run upgrades"
+  shell:
+    cmd: |
+      set -euo pipefail
+      PACKAGES=$(vendor/elgg/elgg/elgg-cli upgrade:list --language en | awk '/Pending upgrades/ { m=1 } m' | grep Elgg | cut -d "|" -f 2 | tr -d " " | paste -s -d " ")
+      echo "Updating packages $PACKAGES"
+      vendor/elgg/elgg/elgg-cli upgrade:batch $PACKAGES
+    chdir: "{{ application_folder_destination }}"
+    executable: "/usr/bin/bash"
+- name: "Activate event_manager"
+  command:
+    cmd: "php vendor/elgg/elgg/elgg-cli plugins:activate event_manager"
+    chdir: "{{ application_folder_destination }}"
+- name: "Run cache:invalidate"
+  command:
+    cmd: "php vendor/elgg/elgg/elgg-cli cache:invalidate"
+    chdir: "{{ application_folder_destination }}"
+- name: "Configure plugins"
+  command:
+    cmd: "php vendor/elgg/elgg/elgg-cli wabue:pluginsettings set {{ setting.plugin }} {{ setting.setting }} '{{ setting.value }}'"
+    chdir: "{{ application_folder_destination }}"
+  loop: "{{ settings }}"
+  loop_control:
+    loop_var: "setting"
+  vars:
+    settings:
+      - plugin: "event_manager"
+        setting: "ical_direct"
+        value: "1"
+      - plugin: "event_manager"
+        setting: "type_list"
+        value: "Arbeitseinsatz,Workshop,Vereinsfeier,Vereinsfahrt,Private Feier,Besprechung,Vereinsgruppen,Wintertheater,Vormittag,Nachmittag,Abend"
+      - plugin: "event_manager"
+        setting: "maps_provider"
+        value: "none"
+      - plugin: "event_manager"
+        setting: "add_event_to_calendar"
+        value: "no"
+      - plugin: "ckeditor"
+        setting: "toolbar_default"
+        value: "undo,redo,|,heading,|,fontSize,fontFamily,fontColor,fontBackgroundColor,|,bold,italic,underline,strikethrough,code,|,NumberedList,BulletedList,outdent,indent,alignment,|,horizontalLine,link,insertTable,highlight,blockQuote,|,sourceEditing"
+      - plugin: "ckeditor"
+        setting: "toolbar_simple"
+        value: "undo,redo,|,heading,|,fontSize,fontFamily,fontColor,fontBackgroundColor,|,bold,italic,underline,strikethrough,code,|,NumberedList,BulletedList,outdent,indent,alignment,|,horizontalLine,link,insertTable,highlight,blockQuote,|,sourceEditing"
+      - plugin: "menu_builder"
+        setting: "menu_site_config"
+        value: >
+          {"menu_name_1519408917":{"access_id":1,"is_action":"0","lightbox":"0","priority":"0","name":"menu_name_1519408917","text":"Spielerliste","href":"members?sort_by[property]=name&amp;sort_by[property_type]=metadata&amp;sort_by[direction]=asc","icon":"","target":"0","parent_name":"0"},"menu_name_1519408937":{"access_id":1,"is_action":"0","lightbox":"0","priority":"2","name":"menu_name_1519408937","text":"Forum","href":"discussion\/group\/45105","icon":"","target":"0","parent_name":"0"},"menu_name_1519408954":{"access_id":1,"is_action":"0","lightbox":"0","priority":"1","name":"menu_name_1519408954","text":"Termine","href":"event\/upcoming","icon":"","target":"0","parent_name":"0"},"menu_name_1519413627":{"access_id":0,"is_action":"0","priority":3,"name":"menu_name_1519413627","text":"Gruppen","href":"groups","target":"0","parent_name":"0"},"menu_name_1519806361":{"access_id":0,"is_action":"0","priority":4,"name":"menu_name_1519806361","text":"Seiten","href":"pages","target":"0","parent_name":"0"},"menu_name_1520854143":{"access_id":1,"is_action":"0","lightbox":"0","priority":"6","name":"menu_name_1520854143","text":"Handbuch","href":"pages\/view\/53543\/handbuch-zum-mitgliederbereich","icon":"","target":"0","parent_name":"0"},"menu_name_1623129656":{"access_id":1,"is_action":"0","lightbox":"0","priority":"5","name":"menu_name_1623129656","text":"Vereinsinfo","href":"pages\/view\/59026\/vereinsinformation","icon":"","target":"0","parent_name":"0"},"menu_name_1636967106":{"access_id":1,"is_action":"0","lightbox":"0","priority":"1636967068","name":"menu_name_1636967106","text":"Verwaltung","href":"membership","icon":"","target":"0","parent_name":"0"},"menu_name_1784025334":{"access_id":1,"is_action":"0","lightbox":"0","priority":"1784025326","name":"menu_name_1784025334","text":"Dateien","href":"\/file","icon":"","target":"0","parent_name":"0"}}
+- name: "Remove stock favicons"
+  file:
+    path: "{{ application_folder_destination }}/mod/favicon_override/graphics"
+    state: "absent"
+- name: "Restore favicons"
+  copy:
+    src: "{{ exporticstemp.path }}/graphics/"
+    dest: "{{ application_folder_destination }}/mod/favicon_override"
+- name: "Import iCal"
+  command:
+    cmd: "php vendor/elgg/elgg/elgg-cli wabue:importics -u root {{ exporticstemp.path }}/Calendar.ics"
+    chdir: "{{ application_folder_destination }}"
+- name: "Export ICS: Delete temporary directory"
+  file:
+    path: "{{ exporticstemp.path }}"
+    state: "absent"
+- name: "Update manual: Copy images"
+  synchronize:
+    src: "../editor_images"
+    dest: "{{ data_folder_destination }}/editor_images"
+    times: yes
+    perms: yes
+- name: "Update manual: import manual"
+  command:
+    cmd: "php vendor/elgg/elgg/elgg-cli wabue:pagecontent -u {{ application_admin_username }} import 53543"
+    chdir: "{{ application_folder_destination }}"
+    stdin: "{{ lookup('ansible.builtin.file', '/home/waldbuehne/handbuchexport.html') }}"
