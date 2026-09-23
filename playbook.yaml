@@ -264,6 +264,8 @@
         src: "{{ remote_tempdir.path }}/data.tar.bz2"
         dest: "{{ data_folder_destination }}"
         remote_src: "yes"
+    - name: "Remove caches"
+      shell: "rm -rf caches chdir={{ data_folder_destination }}"
     - name: "Set owner of event_calendar fork"
       file:
         path: "{{ data_folder_destination }}"
