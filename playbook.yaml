@@ -224,7 +224,7 @@
         path: "{{ data_folder_source }}/*"
         dest: "{{ data_archive.path }}"
         format: "bz2"
-        exclude_path:
+        exclusion_patterns:
           - "caches"
     - name: "Download data archive"
       tags:
