@@ -225,8 +225,7 @@
         dest: "{{ data_archive.path }}"
         format: "bz2"
         exclude_path:
-          - "system_cache"
-          - "views_simplecache"
+          - "caches"
     - name: "Download data archive"
       tags:
         - "uncheckable"
